@@ -2033,6 +2033,10 @@ class Emoji:
     ]
 
     @staticmethod
+    def iter():
+        return iter(Emoji._ITEMS)
+
+    @staticmethod
     def categories():
         """Get a set of categories.
 
