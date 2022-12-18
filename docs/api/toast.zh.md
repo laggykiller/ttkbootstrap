@@ -10,7 +10,7 @@ A semi-transparent popup window for temporary alerts or messages. You may choose
 
 ```python
 import ttkbootstrap as ttk
-from ttkbootstrap.toast import ToastNotification
+from ttkbootstrap.popup.toast import ToastNotification
 
 app = ttk.Window()
 

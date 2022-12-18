@@ -28,7 +28,7 @@ from random import choices
 import ttkbootstrap as ttk
 from ttkbootstrap.style import Bootstyle
 from tkinter.filedialog import askdirectory
-from ttkbootstrap.dialogs import Messagebox
+from ttkbootstrap.dialog import Messagebox
 from ttkbootstrap.constants import *
 from tkinter.scrolledtext import ScrolledText
 from pathlib import Path

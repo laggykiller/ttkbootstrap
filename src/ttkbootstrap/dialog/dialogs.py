@@ -1,6 +1,6 @@
 """
     This module contains various base dialog base classes that can be 
-    used to create custom dialogs for the end user. 
+    used to create custom dialog for the end user.
 
     These classes serve as the basis for the pre-defined static helper
     methods in the `Messagebox`, and `Querybox` container classes.
@@ -12,7 +12,7 @@ import locale
 from datetime import datetime
 from tkinter import font
 import ttkbootstrap as ttk
-from ttkbootstrap import utility
+from ttkbootstrap.utils import utility
 from ttkbootstrap.icons import Icon
 from ttkbootstrap.constants import *
 from tkinter import BaseWidget
@@ -161,7 +161,7 @@ class Dialog(BaseWidget):
 
 class MessageDialog(Dialog):
     """A simple modal dialog class that can be used to build simple
-    message dialogs.
+    message dialog.
 
     Displays a message and a set of buttons. Each of the buttons in the
     message window is identified by a unique symbolic name. After the
@@ -348,7 +348,7 @@ class MessageDialog(Dialog):
 
 class QueryDialog(Dialog):
     """A simple modal dialog class that can be used to build simple
-    data input dialogs. Displays a prompt, and input box, and a set of
+    data input dialog. Displays a prompt, and input box, and a set of
     buttons. Additional data manipulation can be performed on the
     user input post-hoc by overriding the `apply` method.
 
@@ -559,7 +559,7 @@ class DatePickerDialog:
     The available colors include -> primary, secondary, success,
     info, warning, danger, light, dark.
 
-    ![](../../assets/dialogs/date-picker-dialog.png)
+    ![](../../assets/dialog/date-picker-dialog.png)
 
     """
 
@@ -884,7 +884,7 @@ class FontDialog(Dialog):
     can be passed to any widget that accepts a _font_ configuration
     option.
 
-    ![](../../assets/dialogs/querybox-get-font.png)
+    ![](../../assets/dialog/querybox-get-font.png)
     """
 
     def __init__(self, title="Font Selector", parent=None):
@@ -1159,7 +1159,7 @@ class Messagebox:
         """Display a modal dialog box with an OK button and an INFO
         icon.
 
-        ![](../../assets/dialogs/messagebox-show-info.png)
+        ![](../../assets/dialog/messagebox-show-info.png)
 
         Parameters:
 
@@ -1201,7 +1201,7 @@ class Messagebox:
         """Display a modal dialog box with an OK button and a
         warning icon. Also will ring the display bell.
 
-        ![](../../assets/dialogs/messagebox-show-warning.png)
+        ![](../../assets/dialog/messagebox-show-warning.png)
 
         Parameters:
 
@@ -1244,7 +1244,7 @@ class Messagebox:
         """Display a modal dialog box with an OK button and an
         error icon. Also will ring the display bell.
 
-        ![](../../assets/dialogs/messagebox-show-error.png)
+        ![](../../assets/dialog/messagebox-show-error.png)
 
         Parameters:
 
@@ -1295,7 +1295,7 @@ class Messagebox:
         question icon. Also will ring the display bell. You may also
         change the button scheme using the `buttons` parameter.
 
-        ![](../../assets/dialogs/messagebox-show-question.png)
+        ![](../../assets/dialog/messagebox-show-question.png)
 
         Parameters:
 
@@ -1355,7 +1355,7 @@ class Messagebox:
         """Display a modal dialog box with an OK button and and optional
         bell alert.
 
-        ![](../../assets/dialogs/messagebox-ok.png)
+        ![](../../assets/dialog/messagebox-ok.png)
 
         Parameters:
 
@@ -1397,7 +1397,7 @@ class Messagebox:
         """Displays a modal dialog box with OK and Cancel buttons and
         return the symbolic name of the button pressed.
 
-        ![](../../assets/dialogs/messagebox-ok-cancel.png)
+        ![](../../assets/dialog/messagebox-ok-cancel.png)
 
         Parameters:
 
@@ -1445,7 +1445,7 @@ class Messagebox:
         """Display a modal dialog box with YES and NO buttons and return
         the symbolic name of the button pressed.
 
-        ![](../../assets/dialogs/messagebox-yes-no.png)
+        ![](../../assets/dialog/messagebox-yes-no.png)
 
         Parameters:
 
@@ -1494,7 +1494,7 @@ class Messagebox:
         """Display a modal dialog box with YES, NO, and Cancel buttons,
         and return the symbolic name of the button pressed.
 
-        ![](../../assets/dialogs/messagebox-yes-no-cancel.png)
+        ![](../../assets/dialog/messagebox-yes-no-cancel.png)
 
         Parameters:
 
@@ -1543,7 +1543,7 @@ class Messagebox:
         """Display a modal dialog box with RETRY and Cancel buttons;
         returns the symbolic name of the button pressed.
 
-        ![](../../assets/dialogs/messagebox-retry-cancel.png)
+        ![](../../assets/dialog/messagebox-retry-cancel.png)
 
         Parameters:
 
@@ -1599,7 +1599,7 @@ class Querybox:
         """Show a color picker and return the select color when the
         user pressed OK.
 
-        ![](../../assets/dialogs/querybox-get-color.png)
+        ![](../../assets/dialog/querybox-get-color.png)
 
         Parameters:
 
@@ -1618,7 +1618,7 @@ class Querybox:
             Tuple[rgb, hsl, hex]:
                 The selected color in various colors models.
         """
-        from ttkbootstrap.dialogs.colorchooser import ColorChooserDialog
+        from ttkbootstrap.dialog.colorchooser import ColorChooserDialog
 
         dialog = ColorChooserDialog(parent, title, initialcolor)
         if "position" in kwargs:
@@ -1638,7 +1638,7 @@ class Querybox:
     ):
         """Shows a calendar popup and returns the selection.
 
-        ![](../../assets/dialogs/querybox-get-date.png)
+        ![](../../assets/dialog/querybox-get-date.png)
 
         Parameters:
 
@@ -1682,7 +1682,7 @@ class Querybox:
     ):
         """Request a string type input from the user.
 
-        ![](../../assets/dialogs/querybox-get-string.png)
+        ![](../../assets/dialog/querybox-get-string.png)
 
         Parameters:
 
@@ -1733,7 +1733,7 @@ class Querybox:
     ):
         """Request an integer type input from the user.
 
-        ![](../../assets/dialogs/querybox-get-integer.png)
+        ![](../../assets/dialog/querybox-get-integer.png)
 
         Parameters:
 
@@ -1797,7 +1797,7 @@ class Querybox:
     ):
         """Request a float type input from the user.
 
-        ![](../../assets/dialogs/querybox-get-float.png)
+        ![](../../assets/dialog/querybox-get-float.png)
 
         Parameters:
 
@@ -1853,7 +1853,7 @@ class Querybox:
     def get_font(parent=None, **kwargs):
         """Request a customized font
 
-        ![](../../assets/dialogs/querybox-get-font.png)
+        ![](../../assets/dialog/querybox-get-font.png)
 
         Parameters:
 

@@ -6,7 +6,7 @@
 import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from ttkbootstrap import colorutils, utility
+from ttkbootstrap.utils import utility, colorutils
 from PIL import ImageGrab, ImageTk, Image
 from collections import namedtuple
 
@@ -25,7 +25,7 @@ class ColorDropperDialog:
 
     This widget is implemented for **Windows** and **Linux** only.
 
-    ![](../../assets/dialogs/color-dropper.png)       
+    ![](../../assets/dialog/color-dropper.png)
 
     !!! warning "high resolution displays"
         This widget may not function properly on high resolution

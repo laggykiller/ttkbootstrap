@@ -1,5 +1,5 @@
 import ttkbootstrap as ttk
-from ttkbootstrap.dialogs import Querybox, Messagebox
+from ttkbootstrap.dialog import Querybox, Messagebox
 from ttkbootstrap.icons import Icon
 import tkinter as tk
 

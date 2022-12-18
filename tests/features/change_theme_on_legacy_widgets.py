@@ -21,7 +21,7 @@ label.pack(padx=10, pady=10)
 
 text = tk.Text()
 text.pack(padx=10, pady=10)
-text.insert(tk.END, 'This is a demo of themes applied to regular tk widgets.')
+text.insert(tk.END, 'This is a demo of theme applied to regular tk widgets.')
 
 frame = tk.Frame()
 frame.pack(padx=10, pady=10, fill=tk.X)

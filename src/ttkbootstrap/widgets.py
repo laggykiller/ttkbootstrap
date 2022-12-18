@@ -11,7 +11,7 @@ from tkinter.ttk import Sizegrip, Spinbox, Treeview
 from ttkbootstrap.constants import *
 
 # date entry imports
-from ttkbootstrap.dialogs import Querybox
+from ttkbootstrap.dialog import Querybox
 from datetime import datetime
 
 # floodgauge imports
@@ -19,9 +19,9 @@ import math
 
 # meter imports
 from PIL import Image, ImageTk, ImageDraw
-from ttkbootstrap.style import Colors
-from ttkbootstrap import utility
-from ttkbootstrap.style import Bootstyle
+from ttkbootstrap.style.style import Colors
+from ttkbootstrap.utils import utility
+from ttkbootstrap.style.style import Bootstyle
 
 M = 3 # meter image scale, higher number increases resolution
 

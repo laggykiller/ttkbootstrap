@@ -3,13 +3,12 @@ from ttkbootstrap.validation import add_range_validation, add_validation, valida
 from ttkbootstrap.constants import *
 from tkinter import Frame as tkFrame
 from tkinter import Label as tkLabel
-from ttkbootstrap import utility
+from ttkbootstrap.utils import utility, colorutils
 from collections import namedtuple
-from ttkbootstrap import colorutils
-from ttkbootstrap.colorutils import RGB, HSL, HEX, HUE, SAT, LUM
+from ttkbootstrap.utils.colorutils import RGB, HSL, HEX, HUE, SAT, LUM
 from PIL import ImageColor
-from ttkbootstrap.dialogs.colordropper import ColorDropperDialog
-from ttkbootstrap.tooltip import ToolTip
+from ttkbootstrap.dialog.colordropper import ColorDropperDialog
+from ttkbootstrap.popup.tooltip import ToolTip
 from ttkbootstrap.localization import MessageCatalog
 
 STD_SHADES = [0.9, 0.8, 0.7, 0.4, 0.3]
@@ -36,7 +35,7 @@ def validate_color(event):
 class ColorChooser(ttk.Frame):
     """A class which creates a color chooser widget
     
-    ![](../../assets/dialogs/querybox-get-color.png)    
+    ![](../../assets/dialog/querybox-get-color.png)
     """
 
     def __init__(self, master, initialcolor=None, padding=None):
@@ -487,7 +486,7 @@ class ColorChooser(ttk.Frame):
         self.sync_color_values(HSL)
 
 
-from ttkbootstrap.dialogs import Dialog
+from ttkbootstrap.dialog import Dialog
 
 class ColorChooserDialog(Dialog):
     """A class which displays a color chooser dialog. When a color
@@ -496,7 +495,7 @@ class ColorChooserDialog(Dialog):
     hex. These values can be accessed by indexing the tuple or by using
     the named fields.
 
-    ![](../../assets/dialogs/querybox-get-color.png)        
+    ![](../../assets/dialog/querybox-get-color.png)
     
     Examples:
 

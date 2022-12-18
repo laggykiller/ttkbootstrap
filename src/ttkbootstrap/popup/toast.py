@@ -1,7 +1,7 @@
 from tkinter import font
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from ttkbootstrap import utility
+from ttkbootstrap.utils import utility
 
 # https://www.fontspace.com/freeserif-font-f13277
 

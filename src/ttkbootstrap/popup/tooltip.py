@@ -1,6 +1,6 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from ttkbootstrap import utility
+from ttkbootstrap.utils import utility
 
 
 class ToolTip:

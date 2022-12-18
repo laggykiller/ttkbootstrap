@@ -97,15 +97,15 @@ nav:
     - api/index.md
     - api/colorutils.md
     - 'dialogs module':
-      - api/dialogs/colorchooser.md
-      - api/dialogs/colordropper.md
-      - api/dialogs/datepickerdialog.md
-      - api/dialogs/dialog.md
-      - api/dialogs/fontdialog.md
-      - api/dialogs/messagebox.md
-      - api/dialogs/messagedialog.md
-      - api/dialogs/querybox.md
-      - api/dialogs/querydialog.md
+      - api/dialog/colorchooser.md
+      - api/dialog/colordropper.md
+      - api/dialog/datepickerdialog.md
+      - api/dialog/dialog.md
+      - api/dialog/fontdialog.md
+      - api/dialog/messagebox.md
+      - api/dialog/messagedialog.md
+      - api/dialog/querybox.md
+      - api/dialog/querydialog.md
     - 'icons module':
       - api/icons/emoji.md
       - api/icons/icon.md
@@ -136,11 +136,11 @@ nav:
       - api/window/window.md
       - api/window/toplevel.md
   - Themes:
-    - themes/index.md
-    - themes/light.md
-    - themes/dark.md
-    - themes/definitions.md
-    - themes/themecreator.md
+    - theme/index.md
+    - theme/light.md
+    - theme/dark.md
+    - theme/definitions.md
+    - theme/themecreator.md
   - Gallery:
     - gallery/index.md
     - gallery/calculator.md

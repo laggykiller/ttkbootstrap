@@ -5,7 +5,7 @@ from random import randint
 from threading import Thread
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from ttkbootstrap.dialogs import Messagebox
+from ttkbootstrap.dialog import Messagebox
 
 
 class LongRunning(ttk.Frame):

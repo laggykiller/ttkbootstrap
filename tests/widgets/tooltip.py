@@ -1,6 +1,6 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from ttkbootstrap.tooltip import ToolTip
+from ttkbootstrap.popup.tooltip import ToolTip
 
 app = ttk.Window(size=(400, 100))
 

@@ -6,10 +6,10 @@ import ttkbootstrap as ttk
 from tkinter import Frame
 from tkinter.colorchooser import askcolor
 from tkinter.filedialog import askopenfilename, asksaveasfilename
-from ttkbootstrap.themes import standard, user
+from ttkbootstrap.theme import standard, user
 from ttkbootstrap.style import ThemeDefinition
 from ttkbootstrap.constants import *
-from ttkbootstrap.dialogs import Messagebox
+from ttkbootstrap.dialog import Messagebox
 
 
 class ThemeCreator(ttk.Window):
@@ -84,7 +84,7 @@ class ThemeCreator(ttk.Window):
             row.update_patch_color()
 
     def export_user_themes(self):
-        """Export user themes saved in the user.py file"""
+        """Export user theme saved in the user.py file"""
         inpath = Path(user.__file__)
         outpath = asksaveasfilename(
             initialdir="/",
@@ -96,11 +96,11 @@ class ThemeCreator(ttk.Window):
             Messagebox.ok(
                 parent=self,
                 title="Export",
-                message="User themes have been exported.",
+                message="User theme have been exported.",
             )
 
     def import_user_themes(self):
-        """Import user themes into the user.py file. Any existing data
+        """Import user theme into the user.py file. Any existing data
         in the user.py file will be overwritten."""
         outpath = Path(user.__file__)
         inpath = askopenfilename(
@@ -110,14 +110,14 @@ class ThemeCreator(ttk.Window):
         )
         confirm = Messagebox.okcancel(
             title="Import",
-            message="This import will overwrite the existing user themes. Ok to import?",
+            message="This import will overwrite the existing user theme. Ok to import?",
         )
         if confirm == "OK" and inpath:
             shutil.copyfile(inpath, outpath)
             Messagebox.ok(
                 parent=self,
                 title="Export",
-                message="User themes have been imported.",
+                message="User theme have been imported.",
             )
 
     def save_theme(self):
@@ -142,7 +142,7 @@ class ThemeCreator(ttk.Window):
         user.USER_THEMES.update(theme)
         standard.STANDARD_THEMES[name] = theme[name]
 
-        # save user themes to file
+        # save user theme to file
         formatted = json.dumps(user.USER_THEMES, indent=4)
         out = 'USER_THEMES = ' + formatted
         filepath = user.__file__

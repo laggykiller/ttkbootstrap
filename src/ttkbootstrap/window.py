@@ -4,11 +4,11 @@
     consolidated api for initial application startup.
 """
 import tkinter
+from ttkbootstrap.utils import utility
 from ttkbootstrap.constants import *
 from ttkbootstrap.publisher import Publisher
-from ttkbootstrap.style import Style
+from ttkbootstrap.style.style import Style
 from ttkbootstrap.icons import Icon
-from ttkbootstrap import utility
 
 
 def get_default_root(what=None):

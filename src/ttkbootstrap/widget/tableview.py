@@ -4,7 +4,7 @@ from ttkbootstrap.constants import *
 from math import ceil
 from datetime import datetime
 from tkinter import font
-from ttkbootstrap import utility
+from ttkbootstrap.utils import utility
 from typing import Any, Dict, List, Union
 from ttkbootstrap.localization import MessageCatalog
 

@@ -10,7 +10,7 @@ long_description = """
 ![](https://img.shields.io/github/stars/israel-dryer/ttkbootstrap.svg)
 ![](https://img.shields.io/github/forks/israel-dryer/ttkbootstrap.svg)
 
-A supercharged theme extension for tkinter that enables on-demand modern flat style themes inspired by Bootstrap. 
+A supercharged theme extension for tkinter that enables on-demand modern flat style theme inspired by Bootstrap. 
 
 👀 Check out the [documentation](https://ttkbootstrap.readthedocs.io/en/latest/).
 
@@ -19,7 +19,7 @@ A supercharged theme extension for tkinter that enables on-demand modern flat st
 ## Features
 
 ✔️ [**Built-in Themes**](https://ttkbootstrap.readthedocs.io/en/latest/themes/)   
-Over a dozen curated dark and light themes.
+Over a dozen curated dark and light theme.
 
 ✔️ [**Pre-defined Styles:**](https://ttkbootstrap.readthedocs.io/en/latest/styleguide/)  
 Loads of beautiful pre-defined widget styles such as **outline** and **round toggle** buttons.
@@ -28,10 +28,10 @@ Loads of beautiful pre-defined widget styles such as **outline** and **round tog
 Apply colors and types using simple keywords such as **primary** and **striped** instead of the legacy approach of **primary.Striped.Horizontal.TProgressbar**. If you've used Bootstrap for web development, you are already familiar with this approach using css classes.
 
 ✔️ [**Lots of new Widgets:**](https://ttkbootstrap.readthedocs.io/en/latest/api/widgets/dateentry/)  
-ttkbootstrap comes with several new beautifully designed widgets such as **Meter**, **DateEntry**, and **Floodgauge**. Additionally, **dialogs** are now themed and fully customizable.
+ttkbootstrap comes with several new beautifully designed widgets such as **Meter**, **DateEntry**, and **Floodgauge**. Additionally, **dialog** are now themed and fully customizable.
 
 ✔️ [**Built-in Theme Creator:**](https://ttkbootstrap.readthedocs.io/en/latest/themes/themecreator/)  
-Want to create your own theme? Easy! ttkboostrap includes a built-in **theme creator** that enables you to easily build, load, expore, and apply your own custom themes.
+Want to create your own theme? Easy! ttkboostrap includes a built-in **theme creator** that enables you to easily build, load, expore, and apply your own custom theme.
 
 ## Installation
 
@@ -73,7 +73,7 @@ setuptools.setup(
     version="1.10.0",
     author="Israel Dryer",
     author_email="israel.dryer@gmail.com",
-    description="A supercharged theme extension for tkinter that enables on-demand modern flat style themes inspired by Bootstrap.",
+    description="A supercharged theme extension for tkinter that enables on-demand modern flat style theme inspired by Bootstrap.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[

@@ -1,6 +1,6 @@
 import tkinter as tk
 import ttkbootstrap as ttk
-from ttkbootstrap.dialogs import Querybox
+from ttkbootstrap.dialog import Querybox
 from ttkbootstrap import utility
 
 utility.enable_high_dpi_awareness()

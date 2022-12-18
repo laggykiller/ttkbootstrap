@@ -7,7 +7,7 @@ from pathlib import Path
 from tkinter import PhotoImage
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from ttkbootstrap.dialogs import Messagebox
+from ttkbootstrap.dialog import Messagebox
 
 
 PATH = Path(__file__).parent / 'assets'

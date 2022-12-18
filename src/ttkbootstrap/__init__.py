@@ -1,5 +1,6 @@
-from ttkbootstrap.style import Style
-from ttkbootstrap.style import Bootstyle
+from ttkbootstrap.utils import utility, colorutils
+from ttkbootstrap.style.style import Style
+from ttkbootstrap.style.style import Bootstyle
 from ttkbootstrap.widgets import *
 from ttkbootstrap.window import Window, Toplevel
 

@@ -8,16 +8,16 @@ from tkinter import TclError, ttk
 from typing import Any, Callable
 from PIL import ImageTk, ImageDraw, Image, ImageFont
 from ttkbootstrap.constants import *
-from ttkbootstrap.themes.standard import STANDARD_THEMES
+from ttkbootstrap.theme.standard import STANDARD_THEMES
 from ttkbootstrap.publisher import Publisher, Channel
 from ttkbootstrap import utility as util
-from ttkbootstrap import colorutils
+from ttkbootstrap.utils import colorutils
 from PIL import ImageColor
 
 
 try:
     # prevent app from failing if user.py gets corrupted
-    from ttkbootstrap.themes.user import USER_THEMES
+    from ttkbootstrap.theme.user import USER_THEMES
 except (ImportError, ModuleNotFoundError):
     USER_THEMES = {}
 
@@ -445,7 +445,7 @@ class Style(ttk.Style):
         # instantiate the style with another theme
         style = Style(theme='superhero')
 
-        # check all available themes
+        # check all available theme
         for theme in style.theme_names():
             print(theme)
         ```
@@ -527,7 +527,7 @@ class Style(ttk.Style):
             return result
 
     def theme_names(self):
-        """Return a list of all ttkbootstrap themes.
+        """Return a list of all ttkbootstrap theme.
 
         Returns:
 
@@ -651,14 +651,14 @@ class Style(ttk.Style):
         super().configure(style, **kw)
 
     def _load_themes(self):
-        """Load all ttkbootstrap defined themes"""
+        """Load all ttkbootstrap defined theme"""
         # create a theme definition object for each theme, this will be
         # used to generate the theme in tkinter along with any assets
         # at run-time
         if USER_THEMES:
             STANDARD_THEMES.update(USER_THEMES)
-        theme_settings = {"themes": STANDARD_THEMES}
-        for name, definition in theme_settings["themes"].items():
+        theme_settings = {"theme": STANDARD_THEMES}
+        for name, definition in theme_settings["theme"].items():
             self.register_theme(
                 ThemeDefinition(
                     name=name,
@@ -692,10 +692,10 @@ class Style(ttk.Style):
                 method(builder, color)
 
     def load_user_themes(self, file):
-        """Load user themes saved in json format"""
+        """Load user theme saved in json format"""
         with open(file, encoding='utf-8') as f:
             data = json.load(f)
-            themes = data['themes']
+            themes = data['theme']
         for theme in themes:
             for name, definition in theme.items():
                 self.register_theme(
@@ -3748,7 +3748,7 @@ class StyleBuilderTTK:
 
     def create_calendar_style(self, colorname=DEFAULT):
         """Create a style for the
-        ttkbootstrap.dialogs.DatePickerPopup widget.
+        ttkbootstrap.dialog.DatePickerPopup widget.
 
         Parameters:
 
@@ -4504,7 +4504,6 @@ class StyleBuilderTTK:
             str:
                 The PhotoImage name.
         """
-        from math import ceil
 
         box = self.scale_size(1)
         pad = box * 2
@@ -4933,7 +4932,7 @@ class Bootstyle:
                 bootstyle = ""
 
             if "style" in kwargs:
-                style = kwargs.pop("style") or ""
+                style = kwargs.pop("") or ""
             else:
                 style = ""
 
@@ -4986,7 +4985,7 @@ class Bootstyle:
                 bootstyle = ""
 
             if "style" in kwargs:
-                style = kwargs.get("style")
+                style = kwargs.get("")
                 ttkstyle = Bootstyle.update_ttk_widget_style(
                     self, style, **kwargs
                 )

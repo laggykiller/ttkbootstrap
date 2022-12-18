@@ -1,5 +1,5 @@
 import tkinter as tk
-from ttkbootstrap.dialogs import DatePickerDialog
+from ttkbootstrap.dialog import DatePickerDialog
 
 root = tk.Tk()
 

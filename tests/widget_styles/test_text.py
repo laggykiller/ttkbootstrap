@@ -1,6 +1,7 @@
 import ttkbootstrap as ttk
 from random import choice
-from ttkbootstrap import utility
+from ttkbootstrap.utils import utility
+
 utility.enable_high_dpi_awareness()
 
 DARK = 'superhero'
