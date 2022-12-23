@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ttkbootstrap.style.new_style import Style
+    from ttkbootstrap.style.style import Style
     from PIL.ImageTk import PhotoImage
 
 
