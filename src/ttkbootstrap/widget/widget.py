@@ -81,8 +81,11 @@ class StyledWidget:
         else:
             handler = 'tk-'
 
-        handler += 'type' if kind else ''
-        handler += klass
+        handler_kw = [klass]
+        if kind:
+            handler_kw.insert(0, kind)
+
+        handler = handler + '-'.join(handler_kw)
 
         kwargs = {
             'ttkstyle': ttkstyle, 'color': color, 'type': kind, 'class': klass,
