@@ -14,7 +14,8 @@ class BootstyleEngine(ThemeEngine):
         self.register_keywords()
 
     def register_keywords(self):
-        self.handler_set('button', self.style_default_button)
+        self.handler_set('button', self.create_button_style)
+        self.handler_set('outline-button', self.create_outline_button_style)
         self.handler_set('tk-tk', self.style_app_window)
 
     def create_named_fonts(self):
@@ -56,7 +57,7 @@ class BootstyleEngine(ThemeEngine):
                              fieldbg=scheme.background,
                              borderwidth=1)
 
-    def style_default_button(self, options):
+    def create_button_style(self, options):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or PRIMARY
@@ -70,6 +71,7 @@ class BootstyleEngine(ThemeEngine):
         pressed = shades.l2 if scheme.mode == LIGHT else shades.d2
         disabled = shades.l2
 
+        # normal state
         self.style.configure(
             ttkstyle,
             font='TkBody',
@@ -81,18 +83,62 @@ class BootstyleEngine(ThemeEngine):
             relief=RAISED,
             focusthickness=0,
             focuscolor=foreground,
-            padding=(10, 5),
-            anchor=CENTER,
-        )
-        self.style.map(
-            ttkstyle,
-            foreground=[("disabled", disabled)],
-            background=[
-                ("pressed !disabled", pressed),
-                ("hover !disabled", hover)],
-            darkcolor=[
-                ("pressed !disabled", pressed),
-                ("hover !disabled", hover)],
-            lightcolor=[
-                ("pressed !disabled", pressed),
-                ("hover !disabled", hover)])
+            padding='8 4',
+            anchor=CENTER)
+
+        # state mapping
+        self.style.state_map(ttkstyle, 'foreground', [
+            ('disabled', disabled)])
+        self.style.state_map(ttkstyle, 'background', [
+            ('pressed !disabled', pressed),
+            ('hover !disabled', hover)])
+        self.style.state_map(ttkstyle, 'darkcolor', [
+            ('pressed !disabled', pressed),
+            ('hover !disabled', hover)])
+        self.style.state_map(ttkstyle, 'lightcolor', [
+            ('pressed !disabled', pressed),
+            ('hover !disabled', hover)])
+
+    def create_outline_button_style(self, options):
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or PRIMARY
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        shades = scheme.get_shades(colorname)
+        shades_lt = scheme.get_shades('light')
+        shades_bg = scheme.get_shades('background')
+        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
+        bordercolor = foreground = shades.base
+        hover_fg = scheme.get_foreground(colorname)
+        hover_bg = bordercolor
+
+        # normal state
+        self.style.configure(ttkstyle,
+                             font='TkBody',
+                             foreground=foreground,
+                             focuscolor=foreground,
+                             background=shades_bg.base,
+                             darkcolor=shades_bg.base,
+                             lightcolor=shades_bg.base,
+                             bordercolor=bordercolor,
+                             anchor=CENTER,
+                             relief=RAISED,
+                             focusthickness=0,
+                             padding='8 4')
+
+        # state mapping
+        self.style.state_map(ttkstyle, 'foreground', [
+            ('disabled', disabled),
+            ('hover !disabled', hover_fg)])
+        self.style.state_map(ttkstyle, 'focuscolor', [
+            ('hover !disabled', hover_fg)])
+        self.style.state_map(ttkstyle, 'shiftrelief', [
+            ('pressed !disabled', -1)])
+        self.style.state_map(ttkstyle, 'background', [
+            ('hover !disabled', hover_bg)])
+        self.style.state_map(ttkstyle, 'darkcolor', [
+            ('hover !disabled', hover_bg)])
+        self.style.state_map(ttkstyle, 'lightcolor', [
+            ('hover !disabled', hover_bg)])
