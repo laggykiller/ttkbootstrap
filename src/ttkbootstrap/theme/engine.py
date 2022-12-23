@@ -15,7 +15,7 @@ else:
     BASELINE = 2.000984736582964  # 3840x2160
 
 if TYPE_CHECKING:
-    from ttkbootstrap.style.new_style import Style
+    from ttkbootstrap.style.style import Style
 
 
 def image_resize(img, size):
