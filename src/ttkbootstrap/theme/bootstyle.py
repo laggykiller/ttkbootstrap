@@ -1,5 +1,3 @@
-from PIL.ImageDraw import ImageDraw
-from PIL.ImageTk import PhotoImage
 from PIL import Image
 from ttkbootstrap.theme.engine import ThemeEngine, image_draw, image_resize
 from ttkbootstrap.constants import *
@@ -19,7 +17,10 @@ class BootstyleEngine(ThemeEngine):
         self.handler_set('link-button', self.create_link_button_style)
         self.handler_set('checkbutton', self.create_checkbutton_style)
         self.handler_set('radiobutton', self.create_radiobutton_style)
-        self.handler_set('tk-tk', self.style_app_window)
+        self.handler_set('switch', self.create_switch_style)
+        self.handler_set('scrollbar', self.create_scrollbar_style)
+        self.handler_set('spinbox', self.create_spinbox_style)
+        self.handler_set('tk-tk', self.create_window_style)
 
     def create_named_fonts(self):
         """Create the named fonts used by this theme engine
@@ -38,7 +39,7 @@ class BootstyleEngine(ThemeEngine):
         Font(name='TkTitleLarge', family='Segoe UI Semibold', size=s(40))
         Font(name='TkDisplay', family='Segoe UI Semibold', size=s(68))
 
-    def style_app_window(self, options):
+    def create_window_style(self, options):
         """Style the application main window"""
         scheme = options['scheme']
         colorname = 'background'
@@ -458,3 +459,307 @@ class BootstyleEngine(ThemeEngine):
                 ElementLayout(f'{ttkstyle}.indicator', side=LEFT),
                 ElementLayout('Radiobutton.focus', side=LEFT, sticky=NSEW)], [
                     ElementLayout('Radiobutton.label', side=LEFT)]])
+
+    def create_switch_style(self, options):
+        ss = self.scale_size
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'primary'
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        shades = scheme.get_shades(colorname)
+        shades_lt = scheme.get_shades('light')
+        background = shades.base
+        app_bg = scheme.background
+        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
+        outline = shades_lt.d3
+        hover_on = shades.l1 if scheme.mode == LIGHT else shades[5]
+        pressed_on = shades[2] if scheme.mode == LIGHT else shades.d2
+
+        # create radiobutton assets
+        final_size = ss(60, 30)
+        img_size = ss(1200, 600)
+        outer_rect = ss(10, 10, 1190, 590)
+        inner_rect = ss(622, 34, 1166, 566)
+
+        # off - normal
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(outer_rect, outline=outline, width=ss(24),
+                               fill=app_bg, radius=ss(300))
+        draw.rounded_rectangle(inner_rect, outline=app_bg, width=ss(80),
+                               fill=outline, radius=ss(290))
+        img_off = image_resize(im.rotate(180), final_size)
+
+        # off - hover
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(outer_rect, outline=outline, width=ss(24),
+                               fill=app_bg, radius=ss(300))
+        draw.rounded_rectangle(inner_rect, outline=app_bg, width=ss(60),
+                               fill=outline, radius=ss(290))
+        img_off_hover = image_resize(im.rotate(180), final_size)
+
+        # off - pressed
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(outer_rect, outline=outline, width=ss(24),
+                               fill=app_bg, radius=ss(300))
+        draw.rounded_rectangle(ss(500, 34, 1100, 566), outline=app_bg,
+                               width=ss(60), fill=outline, radius=ss(290))
+        img_off_pressed = image_resize(im.rotate(180), final_size)
+
+        # on - normal
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(outer_rect, outline=shades.d2, width=ss(6),
+                               fill=background, radius=ss(300))
+        draw.rounded_rectangle(inner_rect, outline=background, width=ss(80),
+                               fill=app_bg, radius=ss(290))
+        img_on = image_resize(im, final_size)
+
+        # on - hover
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(outer_rect, outline=shades.d2, width=ss(6),
+                               fill=hover_on, radius=ss(300))
+        draw.rounded_rectangle(inner_rect, outline=hover_on, width=ss(60),
+                               fill=app_bg, radius=ss(290))
+        img_on_hover = image_resize(im, final_size)
+
+        # on - pressed
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(outer_rect, fill=pressed_on, radius=ss(300))
+        draw.rounded_rectangle(ss(500, 34, 1100, 566), outline=pressed_on,
+                               width=ss(60), fill=app_bg, radius=ss(290))
+        img_on_pressed = image_resize(im, final_size)
+
+        # off - disabled
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(outer_rect, outline=disabled, width=ss(24),
+                               fill=app_bg, radius=ss(300))
+        draw.rounded_rectangle(inner_rect, outline=app_bg, width=ss(80),
+                               fill=disabled, radius=ss(290))
+        img_off_dis = image_resize(im.rotate(180), final_size)
+
+        # on - disabled
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(outer_rect, outline=outline, width=ss(6),
+                               fill=disabled, radius=ss(300))
+        draw.rounded_rectangle(inner_rect, outline=disabled, width=ss(80),
+                               fill=app_bg, radius=ss(290))
+        img_on_dis = image_resize(im, final_size)
+
+        # style element
+        elem = self.style.element_image_builder(
+            f'{ttkstyle}.indicator', img_on, width=60, height=30,
+            padding='0 0 75 0', sticky='')
+        elem.map('disabled !selected', img_off_dis)
+        elem.map('disabled selected', img_on_dis)
+        elem.map('!selected pressed', img_off_pressed)
+        elem.map('!selected hover', img_off_hover)
+        elem.map('!selected', img_off)
+        elem.map('selected pressed', img_on_pressed)
+        elem.map('selected hover', img_on_hover)
+        elem.build()
+
+        # register assets to prevent GC
+        self.register_assets(scheme.name, img_on, img_off_dis, img_on_dis,
+                             img_off_pressed, img_off_hover, img_off,
+                             img_on_pressed, img_on_hover)
+
+        # style layout
+        layout = self.style.element_layout_builder(ttkstyle)
+        layout.build([
+            ElementLayout('Toolbutton.border', sticky=NSEW), [
+                ElementLayout('Toolbutton.padding', sticky=NSEW), [
+                    ElementLayout(f'{ttkstyle}.indicator', side=LEFT),
+                    ElementLayout('Toolbutton.label', side=RIGHT, expand=True)]]])
+
+        # normal style
+        self.style.configure(
+            ttkstyle, relief=FLAT, borderwidth=0, foreground=scheme.foreground,
+            background=scheme.background)
+
+        # state map
+        self.style.state_map(ttkstyle, 'foreground', [
+            ('disabled', disabled)])
+
+    def create_scrollbar_style(self, options):
+        ss = self.scale_size
+        scheme = options['scheme']
+        orient = str(options['orient']) or VERTICAL
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'light'
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        shades_lt = scheme.get_shades(colorname)
+        background = shades_lt.d3
+
+        # create scrollbar assets
+        pad = ss(25)
+
+        if orient == VERTICAL:
+            thumb_fs = ss(10, 40)
+            trough_fs = ss(18, 72)
+            img_size = 500, 2000
+            round_rect = ss(10, 10, 490, 1990)
+        else:
+            thumb_fs = ss(40, 10)
+            trough_fs = ss(72, 18)
+            img_size = 2000, 500
+            round_rect = ss(10, 10, 1990, 490)
+
+        # thumb image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(round_rect, radius=ss(250), fill=background)
+        img_thumb_norm = image_resize(im, thumb_fs)
+
+        # trough image
+        # --- Will use an empty image for now instead of adding a border to
+        #   the trough. I think it looks better in this case.
+        im = Image.new('RGBA', img_size)  # empty image
+        img_trough = image_resize(im, trough_fs)
+
+        # register style assets
+        self.register_assets(scheme.name, img_trough, img_thumb_norm)
+
+        # element image
+        e_name = ttkstyle.replace('.TS', '.S')
+        if orient == HORIZONTAL:
+            self.style.element_image_builder(
+                f'{e_name}.trough', img_trough, sticky=EW, border='8 0',
+                padding=6).build()
+            self.style.element_image_builder(
+                f'{e_name}.thumb', img_thumb_norm, sticky=EW, border='10 0',
+                padding=12).build()
+
+            # layout
+            layout = self.style.element_layout_builder(ttkstyle)
+            layout.build([
+                ElementLayout(f'{e_name}.trough', sticky=EW), [
+                    ElementLayout(f'{e_name}.thumb', sticky=NSEW)]])
+        else:
+            self.style.element_create(
+                f'{e_name}.trough', 'image', img_trough, sticky=NS,
+                border='0 8')
+            self.style.element_create(
+                f'{e_name}.thumb', 'image', img_thumb_norm, sticky=NS,
+                border='0 10')
+
+            # layout
+            layout = self.style.element_layout_builder(ttkstyle)
+            layout.build([
+                ElementLayout(f'{e_name}.trough', sticky=NS), [
+                    ElementLayout(f'{e_name}.thumb', sticky=NSEW)]])
+
+    def create_spinbox_style(self, options):
+        ss = self.scale_size
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'light'
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        shades = scheme.get_shades(colorname)
+        shades_bg = scheme.get_shades('background')
+        shades_lt = scheme.get_shades('light')
+        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
+        background = shades.d2
+        foreground = scheme.foreground
+        focus_color = scheme.primary if colorname == 'light' else shades.base
+        hover_bg = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
+
+        img_size = ss(800, 400)
+        final_size = ss(200, 100)
+        common = {'xy': ss(10, 10, 790, 390), 'radius': ss(16), 'width': ss(2)}
+
+        # field
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=background)
+        draw.line(ss(12, 388, 788, 388), fill=shades.d3, width=ss(4))
+        img_field = image_resize(im, final_size)
+
+        # field hover
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=background, fill=hover_bg)
+        draw.line(ss(12, 388, 788, 388), fill=shades.d3, width=ss(4))
+        img_hover = image_resize(im, final_size)
+
+        # field focus
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=background)
+        draw.line(ss(12, 387, 788, 387), fill=focus_color, width=ss(5))
+        img_focus = image_resize(im, final_size)
+
+        # field disabled
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=disabled)
+        img_disabled = image_resize(im, final_size)
+
+        # field element
+        el_field = f'{ttkstyle}.field'
+        elem = self.style.element_image_builder(
+            el_field, img_field, sticky=NSEW, border=ss(6), width=ss(200),
+            height=ss(50))
+        elem.map('disabled', img_disabled)
+        elem.map('focus !readonly', img_focus)
+        elem.map('hover !disabled', img_hover)
+        elem.build()
+
+        # chevron normal
+        im, draw = image_draw(ss(1400, 755))
+        draw.line([ss(20, 20), ss(735, 735), ss(700, 700), ss(1380, 20)],
+                  fill=foreground, width=ss(100))
+        img_chev_dw = image_resize(im, ss(14, 8))
+        img_chev_up = image_resize(im.rotate(180), ss(14, 8))
+
+        # chevron pressed
+        im, draw = image_draw(ss(1400, 755))
+        draw.line([ss(20, 20), ss(735, 735), ss(700, 700), ss(1380, 20)],
+                  fill=foreground, width=ss(200))
+        img_chev_dwp = image_resize(im, ss(14, 8))
+        img_chev_upp = image_resize(im.rotate(180), ss(14, 8))
+
+        # chevron disabled
+        im, draw = image_draw(ss(1400, 755))
+        draw.line([ss(20, 20), ss(735, 735), ss(700, 700), ss(1380, 20)],
+                  fill=disabled, width=ss(100))
+        img_chev_dw_dis = image_resize(im, ss(14, 8))
+        img_chev_up_dis = image_resize(im.rotate(180), ss(14, 8))
+
+        self.register_assets(scheme.name, img_chev_dw, img_chev_up,
+                             img_chev_dwp, img_chev_upp, img_chev_dw_dis,
+                             img_chev_up_dis, img_field, img_hover, img_focus,
+                             img_disabled)
+
+        el_chev_up = f'{ttkstyle}.uparrow'
+        elem = self.style.element_image_builder(
+            el_chev_up, img_chev_up, sticky='', padding='16 4')
+        elem.map('disabled', img_chev_up_dis)
+        elem.map('pressed !disabled', img_chev_upp)
+        elem.build()
+
+        el_chev_dw = f'{ttkstyle}.downarrow'
+        elem = self.style.element_image_builder(
+            el_chev_dw, img_chev_dw, sticky='', padding='16 4')
+        elem.map('disabled', img_chev_dw_dis)
+        elem.map('pressed !disabled', img_chev_dwp)
+        elem.build()
+
+        layout = self.style.element_layout_builder(ttkstyle)
+        layout.build([
+            ElementLayout(f'{ttkstyle}.field', expand=True), [
+                ElementLayout(f'{ttkstyle}.downarrow', side=RIGHT, sticky=NS),
+                ElementLayout(f'{ttkstyle}.uparrow', side=RIGHT, sticky=NS)],
+                ElementLayout('Spinbox.padding'), [
+                    ElementLayout('Spinbox.textarea')]])
+
+        # normal style
+        self.style.configure(
+            ttkstyle, foreground=foreground, insertcolor=foreground,
+            selectbackground=shades_bg.base,  selectforeground=foreground,
+            padding='8 4')
+
+        # state style map
+        self.style.state_map(ttkstyle, 'foreground', [
+            ('disabled', disabled)])
+        self.style.state_map(ttkstyle, 'selectbackground', [
+            ('hover !disabled', hover_bg)])
