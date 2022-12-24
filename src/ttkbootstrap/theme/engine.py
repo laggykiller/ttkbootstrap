@@ -94,3 +94,8 @@ class ThemeEngine:
     @abstractmethod
     def create_named_fonts(self):
         raise NotImplemented
+
+    def register_assets(self, scheme, *asset):
+        if scheme not in self._theme_assets:
+            self._theme_assets[scheme] = set()
+        self._theme_assets[scheme].update(asset)
