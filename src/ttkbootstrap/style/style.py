@@ -82,14 +82,14 @@ class Style(ttkStyle):
     def element_clone(self, elementname, themename):
         super().element_create(elementname, 'from', themename)
 
-    def element_layout_builder(self, ttkstyle: str):
-        return ElementLayoutBuilder(self, ttkstyle)
+    def element_layout_builder(self, style: str):
+        return ElementLayoutBuilder(self, style)
 
     def element_image_builder(self, name, image, **kw):
         return ElementImageBuilder(self, name, image, **kw)
 
-    def state_map(self, ttkstyle: str, option: str, statespec: Iterable):
-        self.map(ttkstyle, **{option: statespec})
+    def state_map(self, style: str, option: str, statespec: Iterable):
+        self.map(style, **{option: statespec})
 
     def scheme_create(self, name, mode, **colors):
         self._schemes[name] = Scheme(name, mode, **colors)
