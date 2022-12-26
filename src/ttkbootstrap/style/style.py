@@ -1,18 +1,18 @@
 from collections import namedtuple
 from tkinter.ttk import Style as ttkStyle
-from typing import List, Iterable
+from typing import Iterable
 
 from ttkbootstrap.style.scheme import std_schemes, Scheme
 from ttkbootstrap.publisher import Publisher
-from ttkbootstrap.theme.bootstyle import BootstyleEngine
+from ttkbootstrap.theme import ChromatkEngine, BootstyleEngine
 from ttkbootstrap.style.element import ElementLayoutBuilder
 from ttkbootstrap.style.element import ElementImageBuilder
 
-
 Theme = namedtuple('Theme', 'name scheme engine')
 
-DEFAULT_SCHEME = 'flatly'
-DEFAULT_ENGINE = 'bootstyle'
+THEME_ENGINES = [ChromatkEngine, BootstyleEngine]
+DEFAULT_SCHEME_NAME = 'flatly'
+DEFAULT_ENGINE_NAME = 'chromatk'
 
 
 class Style(ttkStyle):
@@ -30,7 +30,7 @@ class Style(ttkStyle):
         super().__init__(master)
 
         # initialize built-in theme engines
-        self.theme_engine_add(BootstyleEngine)
+        self.theme_engine_add(*THEME_ENGINES)
         Publisher.add('route-style-handler', self._route_style_handler)
 
     @staticmethod
@@ -39,9 +39,10 @@ class Style(ttkStyle):
             Style._instance = Style(master)
         return Style._instance
 
-    def theme_engine_add(self, engine):
-        e = engine(self)
-        self._engines[e.name] = e
+    def theme_engine_add(self, *engine):
+        for e in engine:
+            theme_engine = e(self)
+            self._engines[theme_engine.name] = theme_engine
 
     def theme_names(self):
         return super().theme_names()
@@ -140,13 +141,13 @@ class Style(ttkStyle):
             engine = self._engines.get(engine_name)
             return Theme(theme_name, scheme, engine)
         elif themename in self._schemes:
-            theme_name = f'{themename}-{DEFAULT_ENGINE}'
+            theme_name = f'{themename}-{DEFAULT_ENGINE_NAME}'
             scheme = self._schemes.get(themename)
-            engine = self._engines.get(DEFAULT_ENGINE)
+            engine = self._engines.get(DEFAULT_ENGINE_NAME)
             return Theme(theme_name, scheme, engine)
         elif themename in self._engines:
-            theme_name = f'{DEFAULT_SCHEME}-{themename}'
-            scheme = self._schemes.get(DEFAULT_SCHEME)
+            theme_name = f'{DEFAULT_SCHEME_NAME}-{themename}'
+            scheme = self._schemes.get(DEFAULT_SCHEME_NAME)
             engine = self._engines.get(theme_name)
             return Theme(theme_name, scheme, engine)
         else:
