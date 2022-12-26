@@ -1,4 +1,5 @@
 from PIL import Image
+from PIL.ImageTk import PhotoImage
 from ttkbootstrap.theme.engine import ThemeEngine, image_draw, image_resize
 from ttkbootstrap.constants import *
 from ttkbootstrap.style.element import ElementLayout
@@ -50,16 +51,11 @@ class ChromatkEngine(ThemeEngine):
         window.configure(background=background)
 
         # default global ttk styles for theme
-        self.style.configure('.',
-                             font='TkBody',
-                             background=scheme.background,
-                             darkcolor=scheme.background,
-                             foreground=scheme.foreground,
-                             troughcolor=scheme.background,
-                             selectbg=scheme.info,
-                             selectfg=scheme.background,
-                             fieldbg=scheme.background,
-                             borderwidth=1)
+        self.style.configure(
+            style='.', font='TkBody', background=background,
+            darkcolor=background, foreground=scheme.foreground,
+            troughcolor=background, selectbg=scheme.info, selectfg=background,
+            fieldbg=background, borderwidth=1)
 
     def create_button_style(self, options):
         """Create the default button style"""
@@ -115,9 +111,9 @@ class ChromatkEngine(ThemeEngine):
         self.register_assets(scheme.name, img_norm, img_hover, img_pressed)
 
         # normal state
-        self.style.configure(style=ttkstyle, foreground=foreground,
-                             focuscolor=foreground, relief=RAISED,
-                             anchor=CENTER, padding='8 4')
+        self.style.configure(
+            style=ttkstyle, foreground=foreground, focuscolor=foreground,
+            relief=RAISED, anchor=CENTER, padding='8 4')
 
         # state map
         self.style.state_map(ttkstyle, 'foreground', [
@@ -126,9 +122,10 @@ class ChromatkEngine(ThemeEngine):
             ('pressed !disabled', -1)])
 
     def create_outline_button_style(self, options):
+        ss = self.scale_size
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or PRIMARY
+        colorname = options['color'] or 'primary'
         self.style_register(options['ttkstyle'], scheme)
 
         # style colors
@@ -136,81 +133,110 @@ class ChromatkEngine(ThemeEngine):
         shades_lt = scheme.get_shades('light')
         shades_bg = scheme.get_shades('background')
         disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
-        bordercolor = foreground = shades.base
-        hover_fg = scheme.get_foreground(colorname)
-        hover_bg = bordercolor
+        background = foreground = shades.base
+        hover_bg = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
+
+        # create style assets
+        img_size = ss(800, 400)
+        final_size = ss(200, 100)
+        common = {'xy': ss(10, 10, 790, 390), 'radius': ss(16)}
+
+        # normal image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=background, width=ss(4))
+        img_norm = image_resize(im, final_size)
+
+        # hover image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(
+            **common, outline=background, width=ss(4), fill=hover_bg)
+        img_hover = image_resize(im, final_size)
+
+        # pressed image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(
+            **common, outline=background, width=ss(4), fill=hover_bg)
+        img_pressed = image_resize(im, final_size)
+
+        # disable image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=disabled, width=ss(2))
+        img_disabled = image_resize(im, final_size)
+
+        self.register_assets(scheme.name, img_norm, img_hover, img_pressed,
+                             img_disabled)
+
+        # button image element
+        el_name = f'{ttkstyle}.button'
+        elem = self.style.element_image_builder(
+            name=el_name, image=img_norm, sticky=NSEW, border=ss(6),
+            width=ss(200), height=ss(50))
+        elem.map('disabled', img_disabled)
+        elem.map('pressed !disabled', img_pressed)
+        elem.map('hover !disabled', img_hover)
+        elem.build()
+
+        # button layout
+        layout = self.style.element_layout_builder(ttkstyle)
+        layout.build([
+            ElementLayout(el_name, sticky=NSEW), [
+                ElementLayout('Button.padding'), [
+                    ElementLayout('Button.label', side=LEFT, expand=True)]]])
 
         # normal state
-        self.style.configure(ttkstyle,
-                             font='TkBody',
-                             foreground=foreground,
-                             focuscolor=foreground,
-                             background=shades_bg.base,
-                             darkcolor=shades_bg.base,
-                             lightcolor=shades_bg.base,
-                             bordercolor=bordercolor,
-                             anchor=CENTER,
-                             relief=RAISED,
-                             focusthickness=0,
-                             padding='10 5')
+        self.style.configure(
+            style=ttkstyle, foreground=foreground, relief=RAISED,
+            focuscolor=foreground, anchor=CENTER, padding='8 4')
 
-        # state mapping
+        # state map
         self.style.state_map(ttkstyle, 'foreground', [
-            ('disabled', disabled),
-            ('hover !disabled', hover_fg)])
-        self.style.state_map(ttkstyle, 'focuscolor', [
-            ('hover !disabled', hover_fg)])
+            ('disabled', disabled)])
         self.style.state_map(ttkstyle, 'shiftrelief', [
             ('pressed !disabled', -1)])
-        self.style.state_map(ttkstyle, 'background', [
-            ('hover !disabled', hover_bg)])
-        self.style.state_map(ttkstyle, 'darkcolor', [
-            ('hover !disabled', hover_bg)])
-        self.style.state_map(ttkstyle, 'lightcolor', [
-            ('hover !disabled', hover_bg)])
 
     def create_link_button_style(self, options):
+        ss = self.scale_size
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or PRIMARY
+        colorname = options['color'] or 'primary'
         self.style_register(options['ttkstyle'], scheme)
 
         # style colors
         shades_lt = scheme.get_shades('light')
         disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
         foreground = scheme.get_color(colorname)
-        background = scheme.background
         hover = scheme.info
 
         # normal state
         self.style.configure(
-            ttkstyle,
-            font='TkBody',
-            relief=RAISED,
-            foreground=foreground,
-            focuscolor=foreground,
-            background=background,
-            bordercolor=background,
-            lightcolor=background,
-            darkcolor=background,
-            anchor=CENTER,
-            focusthickness=0,
-            padding='10 5')
+            style=ttkstyle, relief=RAISED, foreground=foreground,
+            padding='8 4', anchor=CENTER)
 
-        # state mapping
+        # normal image
+        im = PhotoImage(Image.new('RGBA', ss(200, 100)))
+
+        # button image element
+        elem = self.style.element_image_builder(
+            name=f'{ttkstyle}.button', image=im, sticky=NSEW, border=ss(6),
+            width=ss(200), height=ss(50)).build()
+
+        self.register_assets(scheme.name, im)
+
+        # button layout
+        layout = self.style.element_layout_builder(ttkstyle)
+        layout.build([
+            ElementLayout(f'{ttkstyle}.button', expand=True), [
+                ElementLayout('Button.padding'), [
+                    ElementLayout('Button.label', expand=True)]]])
+
+        # state style maps
         self.style.state_map(ttkstyle, 'foreground', [
             ('disabled', disabled),
-            ('hover', hover)])
-        self.style.state_map(ttkstyle, 'shiftrelief', [
-            ('pressed !disabled', -2)])
-        self.style.state_map(ttkstyle, 'focuscolor', [
             ('hover !disabled', hover)])
-
-        for state in ('background', 'bordercolor', 'lightcolor', 'darkcolor'):
-            self.style.state_map(ttkstyle, state, [
-                ('disabled', background),
-                ('pressed', background),
-                ('hover', background)])
+        self.style.state_map(ttkstyle, 'shiftrelief', [
+            ('pressed !disabled', '-2')])
+        self.style.state_map(ttkstyle, 'focuscolor', [
+            ('hover', hover)])
 
     def create_checkbutton_style(self, options):
         ss = self.scale_size
@@ -242,95 +268,93 @@ class ChromatkEngine(ThemeEngine):
 
         # off
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=outline, fill=app_bg,
-                               width=ss(24))
+        draw.rounded_rectangle(
+            **common, outline=outline, fill=app_bg, width=ss(24))
         img_off = image_resize(im, final_size)
 
         # off/hover
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=outline, fill=hover_off,
-                               width=ss(24))
+        draw.rounded_rectangle(
+            **common, outline=outline, fill=hover_off, width=ss(24))
         img_off_hover = image_resize(im, final_size)
 
         # off/pressed
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=outline, fill=pressed_off,
-                               width=ss(24))
+        draw.rounded_rectangle(
+            **common, outline=outline, fill=pressed_off, width=ss(24))
         img_off_pressed = image_resize(im, final_size)
 
         # on
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=shades_bg.d2, fill=background,
-                               width=ss(3))
+        draw.rounded_rectangle(
+            **common, outline=shades_bg.d2, fill=background, width=ss(3))
         draw.line(ss(190, 330, 293, 433, 516, 210), width=ss(40),
                   fill=foreground, joint='curve')
         img_on = image_resize(im, final_size)
 
         # on/hover
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=shades_bg.d2, fill=hover_on,
-                               width=ss(3))
+        draw.rounded_rectangle(
+            **common, outline=shades_bg.d2, fill=hover_on, width=ss(3))
         draw.line(ss(190, 330, 293, 433, 516, 210), width=ss(40),
                   fill=foreground, joint='curve')
         img_on_hover = image_resize(im, final_size)
 
         # on/pressed
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=shades_bg.d2, fill=pressed_on,
-                               width=ss(3))
+        draw.rounded_rectangle(
+            **common, outline=shades_bg.d2, fill=pressed_on, width=ss(3))
         draw.line(ss(190, 330, 293, 433, 516, 210), width=ss(40),
                   fill=foreground, joint='curve')
         img_on_pressed = image_resize(im, final_size)
 
         # on/disabled
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=disabled, fill=background,
-                               width=ss(3))
+        draw.rounded_rectangle(
+            **common, outline=disabled, fill=background, width=ss(3))
         draw.line(ss(190, 330, 293, 433, 516, 210), width=ss(40),
                   fill=disabled, joint='curve')
         img_on_dis = image_resize(im, final_size)
 
         # alt
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=shades_bg.d2, fill=background,
-                               width=ss(3))
+        draw.rounded_rectangle(
+            **common, outline=shades_bg.d2, fill=background, width=ss(3))
         draw.line(ss(213, 320, 427, 320), width=ss(40), fill=foreground)
         img_alt = image_resize(im, final_size)
 
         # alt
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=shades_bg.d2, fill=pressed_on,
-                               width=ss(3))
+        draw.rounded_rectangle(
+            **common, outline=shades_bg.d2, fill=pressed_on, width=ss(3))
         draw.line(ss(213, 320, 427, 320), width=ss(40), fill=foreground)
         img_alt_pressed = image_resize(im, final_size)
 
         # alt
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=shades_bg.d2, fill=hover_on,
-                               width=ss(3))
+        draw.rounded_rectangle(
+            **common, outline=shades_bg.d2, fill=hover_on, width=ss(3))
         draw.line(ss(213, 320, 427, 320), width=ss(40), fill=foreground)
         img_alt_hover = image_resize(im, final_size)
 
         # alt/disabled
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=disabled, fill=background,
-                               width=ss(3))
+        draw.rounded_rectangle(
+            **common, outline=disabled, fill=background, width=ss(3))
         draw.line(ss(213, 320, 427, 320), width=ss(40), fill=disabled)
         img_alt_dis = image_resize(im, final_size)
 
         # disabled
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=disabled, fill=foreground,
-                               width=ss(12))
+        draw.rounded_rectangle(
+            **common, outline=disabled, fill=foreground, width=ss(12))
         img_dis = image_resize(im, final_size)
 
         # create image element
         element = ttkstyle.replace('.TC', '.C')
 
         elem = self.style.element_image_builder(
-            name=f'{element}.indicator',
-            image=img_on,
-            border=ss(24, 0),
+            name=f'{element}.indicator', image=img_on, border=ss(24, 0),
             sticky=NS)
 
         elem.map('disabled selected', img_on_dis)
