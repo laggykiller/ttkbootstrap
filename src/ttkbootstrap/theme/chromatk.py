@@ -2,7 +2,7 @@ from PIL import Image
 from PIL.ImageTk import PhotoImage
 from ttkbootstrap.theme.engine import ThemeEngine, image_draw, image_resize
 from ttkbootstrap.constants import *
-from ttkbootstrap.style.element import ElementLayout
+from ttkbootstrap.style.element import ElementLayout as Element
 from tkinter.font import Font
 
 
@@ -16,12 +16,29 @@ class ChromatkEngine(ThemeEngine):
         self.handler_set('button', self.create_button_style)
         self.handler_set('outline-button', self.create_outline_button_style)
         self.handler_set('link-button', self.create_link_button_style)
+        self.handler_set('frame', self.create_frame_style)
+        self.handler_set('label', self.create_label_style)
+        self.handler_set('inverse-label', self.create_inverse_label_style)
+        self.handler_set('labelframe', self.create_labelframe_style)
+        self.handler_set('separator', self.create_separator_style)
+        self.handler_set('entry', self.create_entry_style)
+        self.handler_set('combobox', self.create_combobox_style)
+        self.handler_set('menubutton', self.create_menubutton_style)
+        self.handler_set('notebook', self.create_notebook_style)
+        self.handler_set('panedwindow', self.create_panedwindow_style)
+        self.handler_set('progressbar', self.create_progressbar_style)
+        self.handler_set('scale', self.create_scale_style)
+        self.handler_set('sizegrip', self.create_sizegrip_style)
         self.handler_set('checkbutton', self.create_checkbutton_style)
         self.handler_set('radiobutton', self.create_radiobutton_style)
         self.handler_set('switch', self.create_switch_style)
         self.handler_set('scrollbar', self.create_scrollbar_style)
         self.handler_set('spinbox', self.create_spinbox_style)
         self.handler_set('tk-tk', self.create_window_style)
+        self.handler_set('tk-combobox-popdown',
+                         self.create_combobox_popdown_style)
+        self.handler_set('outline-menubutton',
+                         self.create_outline_menubutton_style)
 
     def create_named_fonts(self):
         """Create the named fonts used by this theme engine
@@ -30,7 +47,10 @@ class ChromatkEngine(ThemeEngine):
         https://learn.microsoft.com/en-us/windows/apps/design/style/xaml-theme-resources#the-xaml-type-ramp
         """
         scaling_factor = 1.4
-        s = lambda x: self.scale_size(-x * scaling_factor)
+
+        def s(x):
+            return self.scale_size(-x * scaling_factor)
+
         Font(name='TkCaption', family='Segoe UI', size=s(12))
         Font(name='TkBody', family='Segoe UI', size=s(14))
         Font(name='TkBodyStrong', family='Segoe UI Semibold', size=s(14))
@@ -104,9 +124,9 @@ class ChromatkEngine(ThemeEngine):
         # button layout
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
-            ElementLayout(f'{ttkstyle}.button', expand=True), [
-                ElementLayout('Button.padding'), [
-                    ElementLayout('Button.label', expand=True)]]])
+            Element(f'{ttkstyle}.button', expand=True), [
+                Element('Button.padding'), [
+                    Element('Button.label', expand=True)]]])
 
         self.register_assets(scheme.name, img_norm, img_hover, img_pressed)
 
@@ -179,9 +199,9 @@ class ChromatkEngine(ThemeEngine):
         # button layout
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
-            ElementLayout(el_name, sticky=NSEW), [
-                ElementLayout('Button.padding'), [
-                    ElementLayout('Button.label', side=LEFT, expand=True)]]])
+            Element(el_name, sticky=NSEW), [
+                Element('Button.padding'), [
+                    Element('Button.label', side=LEFT, expand=True)]]])
 
         # normal state
         self.style.configure(
@@ -216,7 +236,7 @@ class ChromatkEngine(ThemeEngine):
         im = PhotoImage(Image.new('RGBA', ss(200, 100)))
 
         # button image element
-        elem = self.style.element_image_builder(
+        self.style.element_image_builder(
             name=f'{ttkstyle}.button', image=im, sticky=NSEW, border=ss(6),
             width=ss(200), height=ss(50)).build()
 
@@ -225,9 +245,9 @@ class ChromatkEngine(ThemeEngine):
         # button layout
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
-            ElementLayout(f'{ttkstyle}.button', expand=True), [
-                ElementLayout('Button.padding'), [
-                    ElementLayout('Button.label', expand=True)]]])
+            Element(f'{ttkstyle}.button', expand=True), [
+                Element('Button.padding'), [
+                    Element('Button.label', expand=True)]]])
 
         # state style maps
         self.style.state_map(ttkstyle, 'foreground', [
@@ -388,10 +408,10 @@ class ChromatkEngine(ThemeEngine):
         # style layout
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
-            ElementLayout('Checkbutton.padding', sticky=NSEW), [
-                ElementLayout(f'{element}.indicator', side=LEFT, sticky=''),
-                ElementLayout('Checkbutton.focus', side=LEFT, sticky='')], [
-                    ElementLayout('Checkbutton.label', sticky=NSEW)]])
+            Element('Checkbutton.padding', sticky=NSEW), [
+                Element(f'{element}.indicator', side=LEFT, sticky=''),
+                Element('Checkbutton.focus', side=LEFT, sticky='')], [
+                    Element('Checkbutton.label', sticky=NSEW)]])
 
     def create_radiobutton_style(self, options):
         ss = self.scale_size
@@ -501,10 +521,10 @@ class ChromatkEngine(ThemeEngine):
         # style layout
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
-            ElementLayout('Radiobutton.padding', sticky=NSEW), [
-                ElementLayout(f'{ttkstyle}.indicator', side=LEFT),
-                ElementLayout('Radiobutton.focus', side=LEFT, sticky=NSEW)], [
-                    ElementLayout('Radiobutton.label', side=LEFT)]])
+            Element('Radiobutton.padding', sticky=NSEW), [
+                Element(f'{ttkstyle}.indicator', side=LEFT),
+                Element('Radiobutton.focus', side=LEFT, sticky=NSEW)], [
+                    Element('Radiobutton.label', side=LEFT)]])
 
     def create_switch_style(self, options):
         ss = self.scale_size
@@ -613,10 +633,10 @@ class ChromatkEngine(ThemeEngine):
         # style layout
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
-            ElementLayout('Toolbutton.border', sticky=NSEW), [
-                ElementLayout('Toolbutton.padding', sticky=NSEW), [
-                    ElementLayout(f'{ttkstyle}.indicator', side=LEFT),
-                    ElementLayout('Toolbutton.label', side=RIGHT, expand=True)]]])
+            Element('Toolbutton.border', sticky=NSEW), [
+                Element('Toolbutton.padding', sticky=NSEW), [
+                    Element(f'{ttkstyle}.indicator', side=LEFT),
+                    Element('Toolbutton.label', side=RIGHT, expand=True)]]])
 
         # normal style
         self.style.configure(
@@ -640,8 +660,6 @@ class ChromatkEngine(ThemeEngine):
         background = shades_lt.d3
 
         # create scrollbar assets
-        pad = ss(25)
-
         if orient == VERTICAL:
             thumb_fs = ss(10, 40)
             trough_fs = ss(18, 72)
@@ -680,8 +698,8 @@ class ChromatkEngine(ThemeEngine):
             # layout
             layout = self.style.element_layout_builder(ttkstyle)
             layout.build([
-                ElementLayout(f'{e_name}.trough', sticky=EW), [
-                    ElementLayout(f'{e_name}.thumb', sticky=NSEW)]])
+                Element(f'{e_name}.trough', sticky=EW), [
+                    Element(f'{e_name}.thumb', sticky=NSEW)]])
         else:
             self.style.element_create(
                 f'{e_name}.trough', 'image', img_trough, sticky=NS,
@@ -693,8 +711,8 @@ class ChromatkEngine(ThemeEngine):
             # layout
             layout = self.style.element_layout_builder(ttkstyle)
             layout.build([
-                ElementLayout(f'{e_name}.trough', sticky=NS), [
-                    ElementLayout(f'{e_name}.thumb', sticky=NSEW)]])
+                Element(f'{e_name}.trough', sticky=NS), [
+                    Element(f'{e_name}.thumb', sticky=NSEW)]])
 
     def create_spinbox_style(self, options):
         ss = self.scale_size
@@ -792,11 +810,11 @@ class ChromatkEngine(ThemeEngine):
 
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
-            ElementLayout(f'{ttkstyle}.field', expand=True), [
-                ElementLayout(f'{ttkstyle}.downarrow', side=RIGHT, sticky=NS),
-                ElementLayout(f'{ttkstyle}.uparrow', side=RIGHT, sticky=NS)],
-                ElementLayout('Spinbox.padding'), [
-                    ElementLayout('Spinbox.textarea')]])
+            Element(f'{ttkstyle}.field', expand=True), [
+                Element(f'{ttkstyle}.downarrow', side=RIGHT, sticky=NS),
+                Element(f'{ttkstyle}.uparrow', side=RIGHT, sticky=NS)],
+            Element('Spinbox.padding'), [
+                Element('Spinbox.textarea')]])
 
         # normal style
         self.style.configure(
@@ -809,3 +827,756 @@ class ChromatkEngine(ThemeEngine):
             ('disabled', disabled)])
         self.style.state_map(ttkstyle, 'selectbackground', [
             ('hover !disabled', hover_bg)])
+
+    def create_frame_style(self, options):
+        """Create a frame style"""
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'background'
+        self.style_register(options['ttkstyle'], scheme)
+
+        # normal state
+        background = scheme.get_color(colorname)
+        self.style.configure(style=ttkstyle, background=background)
+
+    def create_outline_frame_style(self, options):
+        # TODO
+        pass
+
+    def create_label_style(self, options):
+        """Create a label style"""
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'foreground'
+        self.style_register(options['ttkstyle'], scheme)
+
+        # normal state
+        foreground = scheme.get_color(colorname)
+        self.style.configure(style=ttkstyle, foreground=foreground,
+                             background=scheme.background)
+
+    def create_inverse_label_style(self, options):
+        """Create an inverse label style"""
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'background'
+        self.style_register(options['ttkstyle'], scheme)
+
+        # normal state
+        background = scheme.get_color(colorname)
+        self.style.configure(style=ttkstyle, foreground=scheme.background,
+                             background=background)
+
+    def create_labelframe_style(self, options):
+        """Create an labelframe style"""
+        ss = self.scale_size
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'light'
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        shades = scheme.get_shades(colorname)
+        background = scheme.background
+        foreground = scheme.foreground
+        bordercolor = shades.d3
+
+        im_size = ss(1600, 1600)
+        final_size = ss(64, 64)
+        im, draw = image_draw(im_size)
+        draw.rounded_rectangle((10, 10, 1590, 1590), radius=ss(1600 * 0.12),
+                               outline=bordercolor, width=ss(24))
+        img = image_resize(im, final_size)
+        self.register_assets(scheme.name, img)
+
+        self.style.element_image_builder(
+            f'{ttkstyle}.border', img, sticky=NSEW, border=12).build()
+
+        self.style.element_layout_builder(ttkstyle).build([
+            Element(f'{ttkstyle}.border')])
+
+        # widget label
+        self.style.configure(style=f'{ttkstyle}.Label', foreground=foreground,
+                             background=background)
+
+        # widget frame
+        self.style.configure(style=ttkstyle, borderwidth=2, relief=RAISED,
+                             bordercolor=bordercolor, lightcolor=background,
+                             darkcolor=background, background=background)
+
+    def create_separator_style(self, options):
+        """Create a separator style"""
+        ss = self.scale_size
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'light'
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        shades = scheme.get_shades(colorname)
+        background = shades.d3 if colorname == LIGHT else shades.base
+
+        if options['orient'] == HORIZONTAL:
+            size = ss(40, 1)
+            sticky = EW
+        else:
+            size = ss(1, 40)
+            sticky = NS
+
+        img = PhotoImage(image=Image.new('RGB', size, background))
+        self.register_assets(scheme.name, img)
+
+        name = scheme.name + '.' + ttkstyle.replace('.TS', '.S') + '.separator'
+        if name in self.style.element_names():
+            return
+
+        # style elements and layout
+        self.style.element_create(name, 'image', str(img))
+        self.style.element_layout_builder(name).build([
+            Element('separator', sticky=sticky)])
+
+    def create_entry_style(self, options):
+        """Create an entry style"""
+        ss = self.scale_size
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'light'
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        shades = scheme.get_shades(colorname)
+        shades_bg = scheme.get_shades('background')
+        shades_lt = scheme.get_shades('light')
+        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
+        background = shades.d2
+        foreground = scheme.foreground
+        select_fg = scheme.get_foreground('primary')
+        focus_color = scheme.primary if colorname == 'light' else shades.base
+        hover_bg = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
+
+        img_size = ss(800, 400)
+        final_size = ss(200, 100)
+        common = {'xy': ss(10, 10, 790, 390), 'radius': ss(16), 'width': ss(2)}
+
+        # entry field
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=background)
+        draw.line(ss(12, 388, 788, 388), fill=shades.d3, width=ss(4))
+        img_field = image_resize(im, final_size)
+
+        # entry hover
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=background, fill=hover_bg)
+        draw.line(ss(12, 388, 788, 388), fill=shades.d3, width=ss(4))
+        img_hover = image_resize(im, final_size)
+
+        # entry field focus
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=background)
+        draw.line(ss(12, 387, 788, 387), fill=focus_color, width=ss(5))
+        img_focus = image_resize(im, final_size)
+
+        # entry field disabled
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=disabled)
+        draw.line(ss(12, 387, 788, 387), fill=disabled, width=ss(2))
+        img_disabled = image_resize(im, final_size)
+
+        self.register_assets(scheme.name, img_field, img_hover, img_focus,
+                             img_disabled)
+
+        el_name = f'{ttkstyle}.field'
+        elem = self.style.element_image_builder(
+            el_name, img_field, sticky=NSEW, border=ss(6), width=ss(200),
+            height=ss(50))
+        elem.map('disabled', img_disabled)
+        elem.map('focus', img_focus)
+        elem.map('hover', img_hover)
+        elem.build()
+
+        layout = self.style.element_layout_builder(ttkstyle)
+        layout.build([
+            Element(el_name), [
+                Element('Entry.padding', sticky=NSEW), [
+                    Element('Entry.textarea', sticky=NSEW)]]])
+
+        # normal style
+        self.style.configure(
+            style=ttkstyle, foreground=foreground, insertcolor=foreground,
+            selectbackground=scheme.primary, selectforeground=select_fg,
+            font='TkDefaultFont', padding=4)
+
+        # state style map
+        self.style.state_map(ttkstyle, 'foreground', [
+            ('disabled', disabled)])
+
+    def create_combobox_style(self, options):
+        """Create a combobox style"""
+        ss = self.scale_size
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'light'
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        shades = scheme.get_shades(colorname)
+        shades_bg = scheme.get_shades('background')
+        shades_lt = scheme.get_shades('light')
+        disabled = shades_lt.d3 if scheme.mode == LIGHT else shades_lt.d4
+        background = shades.d2
+        foreground = scheme.foreground
+        focus_color = scheme.primary if colorname == 'light' else shades.base
+        hover_bg = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
+
+        img_size = ss(800, 400)
+        final_size = ss(200, 100)
+        common = {'xy': ss(10, 10, 790, 390), 'radius': ss(16), 'width': ss(2)}
+
+        # combo field
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=background)
+        draw.line(ss(12, 388, 788, 388), fill=shades.d3, width=ss(4))
+        img_field = image_resize(im, final_size)
+
+        # combo hover
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=background, fill=hover_bg)
+        draw.line(ss(12, 388, 788, 388), fill=shades.d3, width=ss(4))
+        img_hover = image_resize(im, final_size)
+
+        # combo focus
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=background)
+        draw.line(ss(12, 387, 788, 387), fill=focus_color, width=ss(5))
+        img_focus = image_resize(im, final_size)
+
+        # combo disabled
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=disabled)
+        img_disabled = image_resize(im, final_size)
+
+        # create field element
+        el_field = f'{ttkstyle}.field'
+        elem = self.style.element_image_builder(
+            el_field, img_field, sticky=NSEW, border=ss(6), width=ss(200),
+            height=ss(50))
+        elem.map('disabled', img_disabled)
+        elem.map('focus !readonly', img_focus)
+        elem.map('hover !disabled', img_hover)
+        elem.build()
+
+        # chevron normal
+        im, draw = image_draw(ss(1400, 755))
+        draw.line([ss(20, 20), ss(735, 735), ss(700, 700), ss(1380, 20)],
+                  fill=foreground, width=ss(100))
+        img_chevron = image_resize(im, ss(14, 8))
+
+        # chevron disabled
+        im, draw = image_draw(ss(1400, 755))
+        draw.line([ss(20, 20), ss(735, 735), ss(700, 700), ss(1380, 20)],
+                  fill=disabled, width=ss(100))
+        img_chev_dis = image_resize(im, ss(14, 8))
+
+        el_chev = f'{ttkstyle}.chevron'
+        elem = self.style.element_image_builder(
+            el_chev, img_chevron, sticky='', padding='16 4')
+        elem.map('disabled', img_chev_dis)
+        elem.build()
+
+        self.register_assets(scheme.name, img_field, img_hover, img_focus,
+                             img_disabled, img_chevron, img_chev_dis)
+
+        layout = self.style.element_layout_builder(ttkstyle)
+        layout.build([
+            Element(f'{ttkstyle}.field', expand=True), [
+                Element(f'{ttkstyle}.chevron', side=RIGHT, sticky=''),
+                Element('Combobox.padding'), [
+                    Element('Combobox.textarea')]]])
+
+        # normal style
+        self.style.configure(style=ttkstyle, foreground=foreground,
+                             insertcolor=foreground,
+                             selectbackground=shades_bg.base,
+                             selectforeground=foreground, padding='8 4')
+
+        # state style map
+        self.style.state_map(ttkstyle, 'foreground', [
+            ('disabled', disabled)])
+        self.style.state_map(ttkstyle, 'selectbackground', [
+            ('hover !disabled', hover_bg)])
+
+        # setup options for scrollbar
+        opt = options.copy()
+        opt['orient'] = VERTICAL
+        opt['ttkstyle'] = 'TCombobox.Vertical.TScrollbar'
+        self.create_scrollbar_style(opt)
+
+    @staticmethod
+    def create_combobox_popdown_style(options):
+        """Style the embedded popdown window within the combobox"""
+        scheme = options['scheme']
+
+        # style colors
+        shades_bg = scheme.get_shades('background')
+        shades_lt = scheme.get_shades('light')
+        foreground = scheme.foreground
+        selectbackground = scheme.info
+        selectforeground = scheme.get_foreground('info')
+        background = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
+
+        # set the application window style
+        widget = options['widget']
+
+        tk_settings = []
+        tk_settings.extend(["-borderwidth", 0])
+        tk_settings.extend(["-background", background])
+        tk_settings.extend(["-foreground", foreground])
+        tk_settings.extend(["-selectbackground", selectbackground])
+        tk_settings.extend(["-selectforeground", selectforeground])
+
+        # set popdown style
+        popdown = widget.tk.eval(f"ttk::combobox::PopdownWindow {str(widget)}")
+        widget.tk.call(f"{popdown}.f.l", "configure", *tk_settings)
+
+        # set scrollbar style
+        sb_style = "TCombobox.Vertical.TScrollbar"
+        widget.tk.call(f"{popdown}.f.sb", "configure", "-style", sb_style)
+
+    def create_menubutton_style(self, options):
+        """Create the default menubutton style"""
+        ss = self.scale_size
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'primary'
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        shades = scheme.get_shades(colorname)
+        foreground = scheme.get_foreground(colorname)
+        background = shades.base
+        hover = shades.l1 if scheme.mode == LIGHT else shades.d1
+        disabled = shades.l2
+        img_size = ss(800, 400)
+        final_size = ss(200, 100)
+        common = {'xy': ss(10, 10, 790, 390), 'radius': ss(16),
+                  'outline': shades.d2, 'width': ss(3)}
+
+        # normal image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, fill=background)
+        img_norm = image_resize(im, final_size)
+
+        # hover image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, fill=hover)
+        img_hover = image_resize(im, final_size)
+
+        # button image element
+        elem = self.style.element_image_builder(
+            f'{ttkstyle}.button', img_norm, sticky=NSEW, border=ss(6),
+            width=ss(200), height=ss(50))
+        elem.map('hover !disabled', img_hover)
+        elem.build()
+
+        # chevron normal
+        im, draw = image_draw(ss(1400, 755))
+        draw.line([ss(20, 20), ss(735, 735), ss(700, 700), ss(1380, 20)],
+                  fill=foreground, width=ss(100))
+        img_chev_norm = image_resize(im, ss(14, 8))
+
+        # chevron disabled
+        im, draw = image_draw(ss(1400, 755))
+        draw.line([ss(20, 20), ss(735, 735), ss(700, 700), ss(1380, 20)],
+                  fill=disabled, width=ss(100))
+        img_chev_dis = image_resize(im, ss(14, 8))
+
+        # chevron element
+        el_chev = f'{ttkstyle}.chevron'
+        elem = self.style.element_image_builder(el_chev, img_chev_norm,
+                                                sticky='', padding='16 4')
+        elem.map('disabled', img_chev_dis)
+        elem.build()
+
+        self.register_assets(scheme.name, img_norm, img_hover, img_chev_norm,
+                             img_chev_dis)
+
+        # button layout
+        layout = self.style.element_layout_builder(ttkstyle)
+        layout.build([
+            Element(f'{ttkstyle}.button', sticky=NSEW), [
+                Element('Menubutton.focus', sticky=NSEW), [
+                    Element(f'{ttkstyle}.chevron', side=RIGHT, sticky=''),
+                    Element('Menubutton.padding', sticky=EW), [
+                        Element('Menubutton.label', side=LEFT, sticky='')]]]])
+
+        # normal state
+        self.style.configure(style=ttkstyle, foreground=foreground,
+                             anchor=CENTER, padding='8 4')
+
+        # state map
+        self.style.state_map(ttkstyle, 'foreground', [
+            ('disabled', disabled)])
+
+    def create_outline_menubutton_style(self, options):
+        """Create an outline menubutton style"""
+        ss = self.scale_size
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'primary'
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        shades = scheme.get_shades(colorname)
+        shades_lt = scheme.get_shades('light')
+        shades_bg = scheme.get_shades('background')
+        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
+        background = foreground = shades.base
+        hover_bg = shades_bg.l2 if scheme.mode == DARK else shades_lt.base
+
+        # create style assets
+        img_size = ss(800, 400)
+        final_size = ss(200, 100)
+        common = {'xy': ss(10, 10, 790, 390), 'radius': ss(16)}
+
+        # normal image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=background, width=ss(4))
+        img_norm = image_resize(im, final_size)
+
+        # hover image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=background, width=ss(4),
+                               fill=hover_bg)
+        img_hover = image_resize(im, final_size)
+
+        # pressed image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=background, width=ss(4),
+                               fill=hover_bg)
+        img_pressed = image_resize(im, final_size)
+
+        # disable image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=disabled, width=ss(2))
+        img_disabled = image_resize(im, final_size)
+
+        # button image element
+        el_name = f'{ttkstyle}.button'
+        elem = self.style.element_image_builder(
+            el_name, image=img_norm, sticky=NSEW, border=ss(6), width=ss(200),
+            height=ss(50))
+        elem.map('disabled', img_disabled)
+        elem.map('pressed !disabled', img_pressed)
+        elem.map('hover !disabled', img_hover)
+        elem.build()
+
+        # chevron normal
+        im, draw = image_draw(ss(1400, 755))
+        draw.line([ss(20, 20), ss(735, 735), ss(700, 700), ss(1380, 20)],
+                  fill=foreground, width=ss(100))
+        img_chev_norm = image_resize(im, ss(14, 8))
+
+        # chevron disabled
+        im, draw = image_draw(ss(1400, 755))
+        draw.line([ss(20, 20), ss(735, 735), ss(700, 700), ss(1380, 20)],
+                  fill=disabled, width=ss(100))
+        img_chev_dis = image_resize(im, ss(14, 8))
+
+        # chevron element
+        el_chev = f'{ttkstyle}.chevron'
+        elem = self.style.element_image_builder(el_chev, img_chev_norm,
+                                                sticky='', padding='16 4')
+        elem.map('disabled', img_chev_dis)
+        elem.build()
+
+        self.register_assets(scheme.name, img_norm, img_hover, img_pressed,
+                             img_disabled, img_chev_norm, img_chev_dis)
+
+        # button layout
+        layout = self.style.element_layout_builder(ttkstyle)
+        layout.build([
+            Element(f'{ttkstyle}.button', sticky=NSEW), [
+                Element('Menubutton.focus', sticky=NSEW), [
+                    Element(f'{ttkstyle}.chevron', side=RIGHT, sticky=''),
+                    Element('Menubutton.padding', sticky=EW), [
+                        Element('Menubutton.label', side=LEFT, sticky='')]]]])
+
+        # normal state
+        self.style.configure(style=ttkstyle, foreground=foreground,
+                             focuscolor=foreground, anchor=CENTER,
+                             padding='8 4')
+
+        # state map
+        self.style.state_map(ttkstyle, 'foreground', [
+            ('disabled', disabled)])
+
+    def create_notebook_style(self, options):
+        """Create the notebook style"""
+        ss = self.scale_size
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        colorname = options['color'] or 'light'
+        shades = scheme.get_shades(colorname)
+        background = scheme.background
+        inactive_bg = shades.d1 if scheme.mode == LIGHT else shades.d4
+        bordercolor = shades.d2 if scheme.mode == LIGHT else shades.d4
+
+        # notebook tab
+        img_size = ss(64, 64)
+        end_size = ss(32, 32)
+        common = {'xy': ss(1, 1, 63, 80), 'radius': ss(12), 'width': ss(1)}
+
+        # notebook tab active
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=bordercolor, fill=background)
+        img_tab_on = image_resize(im, end_size)
+
+        # notebook tab inactive
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, outline=inactive_bg, fill=inactive_bg)
+        img_tab_off = image_resize(im, end_size)
+
+        # notebook tab element
+        e_name = ttkstyle.replace('TN', 'N')
+        elem = self.style.style.element_image_builder(
+            f'{e_name}.tab', image=img_tab_on, border=ss(13, 13, 10, 0),
+            padding=ss(16, 14, 14, 6), height=ss(end_size[0]))
+        elem.map('!selected', img_tab_off)
+        elem.build()
+
+        # notebook border
+        im_size = ss(1600, 1600)
+        final_size = ss(64, 64)
+        im, draw = image_draw(im_size)
+        draw.rounded_rectangle((10, 10, 1590, 1800), radius=ss(1600 * 0.12),
+                               outline=bordercolor, width=ss(24),
+                               fill=inactive_bg)
+        img_border = image_resize(im, final_size)
+
+        self.register_assets(scheme.name, img_tab_on, img_tab_off, img_border)
+
+        # notebook border element
+        self.style.element_create(f'{e_name}.border', 'image', img_border,
+                                  sticky=NSEW, border=ss(6), width=ss(200),
+                                  height=ss(50))
+
+        # notebook layout
+        layout = self.style.element_layout_builder(ttkstyle)
+        layout.build([
+            Element(f'{e_name}.border'), [
+                Element(f'{ttkstyle}.Tab', expand=True)]])
+
+        self.style.configure(ttkstyle, padding='1')
+        self.style.configure(f'{ttkstyle}.Tab', focuscolor='')
+        self.style.state_map(f'{ttkstyle}.Tab', 'background', [
+            ('selected', background)])
+
+    def create_panedwindow_style(self, options):
+        """Create a panedwindow style"""
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'light'
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        shades = scheme.get_shades(colorname)
+        background = shades.d3 if colorname == LIGHT else shades.base
+
+        # normal state
+        self.style.configure(ttkstyle, background=background)
+        st = self.scale_size(1)
+        self.style.configure('Sash', gripcount=0, sashthickness=st)
+
+    def create_progressbar_style(self, options):
+        """Create a progressbar style"""
+        ss = self.scale_size
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or 'primary'
+        orient = options['orient']
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        shades = scheme.get_shades(colorname)
+        shades_bg = scheme.get_shades('background')
+        shades_lt = scheme.get_shades('light')
+        background = shades.base
+        outline = shades_bg.d2
+        troughcolor = shades_lt.d3 if scheme.mode == DARK else shades_bg.d1
+
+        if orient == VERTICAL:
+            final_size = ss(10, 40)
+            img_size = ss(500, 2000)
+            common = {'xy': ss(10, 10, 490, 1990), 'radius': ss(250)}
+        else:
+            final_size = ss(40, 10)
+            img_size = ss(2000, 500)
+            common = {'xy': ss(10, 10, 1990, 490), 'radius': ss(250)}
+
+        # progressbar
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, fill=background)
+        img_pbar = image_resize(im, final_size)
+
+        # trough
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, fill=troughcolor, outline=outline,
+                               width=ss(12))
+        img_trough = image_resize(im, final_size)
+
+        self.register_assets(scheme.name, img_pbar, img_trough)
+
+        # create elements
+        self.style.element_create(f'{ttkstyle}.pbar', 'image', img_pbar,
+                                  border=ss(4))
+        self.style.element_create(f'{ttkstyle}.trough', 'image', img_trough,
+                                  border=ss(4), padding=0)
+
+        # create progressbar layout
+        sticky = EW if orient == HORIZONTAL else NS
+        side = LEFT if orient == HORIZONTAL else BOTTOM
+        layout = self.style.element_layout_builder(ttkstyle)
+        layout.build([
+            Element(f'{ttkstyle}.trough', sticky=EW), [
+                Element(f'{ttkstyle}.pbar', side=side, sticky=sticky)]])
+
+    def create_scale_style(self, options):
+        """Create a scale style"""
+        ss = self.scale_size
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        orient = options['orient']
+        colorname = options['color'] or 'primary'
+        shades = scheme.get_shades(colorname)
+        shades_bg = scheme.get_shades('background')
+        shades_lt = scheme.get_shades('light')
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        background = shades.base
+        app_bg = scheme.background
+        outline = shades_lt.d3
+        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
+        pressed = shades.d2 if scheme.mode == DARK else shades.l2
+        hover = shades.d1 if scheme.mode == DARK else shades.l1
+        troughcolor = shades_lt.d3 if scheme.mode == DARK else shades_bg.d1
+        hover_bg = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
+
+        # create scale assets
+        size = ss(32)
+        img_size = ss(640, 640)
+        rect = ss(20, 20, 620, 620)
+        radius = ss(310)
+        common = {'xy': rect, 'radius': radius}
+
+        # handle normal
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, width=150, outline=app_bg,
+                               fill=background)
+        draw.rounded_rectangle(**common, width=20, outline=outline)
+        img_normal = PhotoImage(image=im.resize((size, size), Image.LANCZOS))
+
+        # pressed state image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, width=180, outline=hover_bg,
+                               fill=pressed)
+        draw.rounded_rectangle(**common, width=20, outline=outline)
+        img_pressed = image_resize(im, (size, size))
+
+        # hover state image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, width=120, outline=hover_bg,
+                               fill=hover)
+        draw.rounded_rectangle(**common, width=20, outline=outline)
+        img_hover = image_resize(im, (size, size))
+
+        # disabled state image
+        im, draw = image_draw(img_size)
+        draw.rounded_rectangle(**common, width=150, outline=app_bg,
+                               fill=disabled)
+        draw.rounded_rectangle(**common, width=20, outline=disabled)
+        img_disabled = image_resize(im, (size, size))
+
+        # create slider element
+        slider_name = f'{ttkstyle}.slider'
+        elem = self.style.element_image_builder(slider_name, img_normal)
+        elem.map('disabled', img_disabled)
+        elem.map('pressed !disabled', img_pressed)
+        elem.map('hover !disabled', img_hover)
+        elem.build()
+
+        # track image
+        if orient == VERTICAL:
+            track_size = self.scale_size(5, 40)
+        else:
+            track_size = self.scale_size(40, 5)
+
+        img_track = PhotoImage(image=Image.new('RGB', track_size, troughcolor))
+
+        self.register_assets(scheme.name, img_normal, img_pressed, img_hover,
+                             img_disabled, img_track)
+
+        # create track element
+        track_name = f'{ttkstyle}.track'
+        self.style.element_create(track_name, 'image', img_track)
+
+        # slider layout
+        side = LEFT if orient == HORIZONTAL else TOP
+        sticky = EW if orient == HORIZONTAL else NS
+
+        layout = self.style.element_layout_builder(ttkstyle)
+        layout.build([
+            Element(f'{ttkstyle}.focus', expand=True, sticky=NSEW), [
+                Element(track_name, sticky=sticky),
+                Element(slider_name, side=side)]])
+
+    def create_sizegrip_style(self, options):
+        """Create a sizegrip style"""
+        scheme = options['scheme']
+        ttkstyle = options['ttkstyle']
+        colorname = options['color'] or LIGHT
+        self.style_register(options['ttkstyle'], scheme)
+
+        # style colors
+        shades = scheme.get_shades(colorname)
+        shades_bg = scheme.get_shades('background')
+
+        if colorname == LIGHT:
+            fill = shades.d3 if scheme.mode == DARK else shades_bg.d2
+        else:
+            fill = shades.base
+
+        # create sizegrip assets
+        box = self.scale_size(1)
+        pad = box * 1
+        chunk = box + pad  # 4
+        w = chunk * 3 + pad  # 14
+        h = chunk * 3 + pad  # 14
+        size = w, h
+
+        im, draw = image_draw(size)
+        draw.rectangle((chunk * 2 + pad, pad, chunk * 3, chunk), fill=fill)
+        draw.rectangle((chunk * 2 + pad, chunk + pad, chunk * 3, chunk * 2),
+                       fill=fill)
+        draw.rectangle(
+            (chunk * 2 + pad, chunk * 2 + pad, chunk * 3, chunk * 3),
+            fill=fill)
+        draw.rectangle((chunk + pad, chunk + pad, chunk * 2, chunk * 2),
+                       fill=fill)
+        draw.rectangle((chunk + pad, chunk * 2 + pad, chunk * 2, chunk * 3),
+                       fill=fill)
+        draw.rectangle((pad, chunk * 2 + pad, chunk, chunk * 3), fill=fill)
+
+        img_grip = PhotoImage(image=im)
+        self.register_assets(scheme.name, img_grip)
+
+        # widget element
+        element_name = f'{ttkstyle}.sizegrip'
+        self.style.element_create(element_name, 'image', img_grip)
+
+        # widget layout
+        self.style.element_layout_builder(ttkstyle).build([
+            Element(element_name, side=BOTTOM, sticky=SE)])
