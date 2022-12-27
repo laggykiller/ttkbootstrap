@@ -650,7 +650,7 @@ class ChromatkEngine(ThemeEngine):
     def create_scrollbar_style(self, options):
         ss = self.scale_size
         scheme = options['scheme']
-        orient = str(options['orient']) or VERTICAL
+        orient = options['orient'] or VERTICAL
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'light'
         self.style_register(options['ttkstyle'], scheme)
@@ -803,7 +803,7 @@ class ChromatkEngine(ThemeEngine):
 
         el_chev_dw = f'{ttkstyle}.downarrow'
         elem = self.style.element_image_builder(
-            el_chev_dw, img_chev_dw, sticky='', padding='16 4')
+            el_chev_dw, img_chev_dw, sticky='', padding='8 4')
         elem.map('disabled', img_chev_dw_dis)
         elem.map('pressed !disabled', img_chev_dwp)
         elem.build()
@@ -811,10 +811,10 @@ class ChromatkEngine(ThemeEngine):
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
             Element(f'{ttkstyle}.field', expand=True), [
-                Element(f'{ttkstyle}.downarrow', side=RIGHT, sticky=NS),
-                Element(f'{ttkstyle}.uparrow', side=RIGHT, sticky=NS)],
-            Element('Spinbox.padding'), [
-                Element('Spinbox.textarea')]])
+                Element('Spinbox.padding', sticky=NSEW), [
+                    Element(f'{ttkstyle}.downarrow', side=RIGHT, sticky=NS),
+                    Element(f'{ttkstyle}.uparrow', side=RIGHT, sticky=NS),
+                    Element('Spinbox.textarea', side=LEFT)]]])
 
         # normal style
         self.style.configure(
@@ -1079,7 +1079,7 @@ class ChromatkEngine(ThemeEngine):
 
         el_chev = f'{ttkstyle}.chevron'
         elem = self.style.element_image_builder(
-            el_chev, img_chevron, sticky='', padding='16 4')
+            el_chev, img_chevron, sticky='', padding='8 4')
         elem.map('disabled', img_chev_dis)
         elem.build()
 
@@ -1089,9 +1089,9 @@ class ChromatkEngine(ThemeEngine):
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
             Element(f'{ttkstyle}.field', expand=True), [
-                Element(f'{ttkstyle}.chevron', side=RIGHT, sticky=''),
-                Element('Combobox.padding'), [
-                    Element('Combobox.textarea')]]])
+                Element('Combobox.padding', sticky=NSEW), [
+                    Element(f'{ttkstyle}.chevron', side=RIGHT, sticky=''),
+                    Element('Combobox.textarea', side=LEFT, sticky='')]]])
 
         # normal style
         self.style.configure(style=ttkstyle, foreground=foreground,
@@ -1193,7 +1193,7 @@ class ChromatkEngine(ThemeEngine):
         # chevron element
         el_chev = f'{ttkstyle}.chevron'
         elem = self.style.element_image_builder(el_chev, img_chev_norm,
-                                                sticky='', padding='16 4')
+                                                sticky='')
         elem.map('disabled', img_chev_dis)
         elem.build()
 
@@ -1205,8 +1205,8 @@ class ChromatkEngine(ThemeEngine):
         layout.build([
             Element(f'{ttkstyle}.button', sticky=NSEW), [
                 Element('Menubutton.focus', sticky=NSEW), [
-                    Element(f'{ttkstyle}.chevron', side=RIGHT, sticky=''),
                     Element('Menubutton.padding', sticky=EW), [
+                        Element(f'{ttkstyle}.chevron', side=RIGHT, sticky=''),
                         Element('Menubutton.label', side=LEFT, sticky='')]]]])
 
         # normal state
@@ -1285,7 +1285,7 @@ class ChromatkEngine(ThemeEngine):
         # chevron element
         el_chev = f'{ttkstyle}.chevron'
         elem = self.style.element_image_builder(el_chev, img_chev_norm,
-                                                sticky='', padding='16 4')
+                                                sticky='')
         elem.map('disabled', img_chev_dis)
         elem.build()
 
@@ -1297,8 +1297,8 @@ class ChromatkEngine(ThemeEngine):
         layout.build([
             Element(f'{ttkstyle}.button', sticky=NSEW), [
                 Element('Menubutton.focus', sticky=NSEW), [
-                    Element(f'{ttkstyle}.chevron', side=RIGHT, sticky=''),
                     Element('Menubutton.padding', sticky=EW), [
+                        Element(f'{ttkstyle}.chevron', side=RIGHT, sticky=''),
                         Element('Menubutton.label', side=LEFT, sticky='')]]]])
 
         # normal state
@@ -1341,7 +1341,7 @@ class ChromatkEngine(ThemeEngine):
 
         # notebook tab element
         e_name = ttkstyle.replace('TN', 'N')
-        elem = self.style.style.element_image_builder(
+        elem = self.style.element_image_builder(
             f'{e_name}.tab', image=img_tab_on, border=ss(13, 13, 10, 0),
             padding=ss(16, 14, 14, 6), height=ss(end_size[0]))
         elem.map('!selected', img_tab_off)
