@@ -26,6 +26,7 @@ class StyledWidget:
         self._is_ttk = kw.get('is_ttk', True)
         self._is_hybrid = kw.get('is_hybrid', False)
         self._hybrid_styles = set()
+        self.update_widget_style()
 
     @abstractmethod
     def update_widget_style(self, **kw):
@@ -35,7 +36,7 @@ class StyledWidget:
 
         # widget orientation
         try:
-            orient = self.cget('orient')
+            orient = str(self.cget('orient'))
         except TclError:
             orient = None
 
