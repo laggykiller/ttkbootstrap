@@ -110,6 +110,8 @@ class Scheme:
         colors = self.__dict__.copy()
         del colors['name']
         del colors['mode']
+        del colors['background']
+        del colors['foreground']
         return iter(colors)
 
     def __repr__(self):
