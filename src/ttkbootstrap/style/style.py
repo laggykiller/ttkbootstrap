@@ -71,9 +71,8 @@ class Style(ttkStyle):
         super().theme_use(theme.name)
         return Publisher.dispatch('theme-changed')
 
-    @staticmethod
-    def theme_current():
-        return Style._current_theme
+    def theme_current(self):
+        return self._current_theme
 
     def theme_create(self, theme: Theme, parent=None, settings=None):
         self._themes[theme.name] = theme
