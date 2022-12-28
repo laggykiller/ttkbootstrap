@@ -37,6 +37,7 @@ class StyledWidget:
         # widget orientation
         try:
             orient = str(self.cget('orient'))
+            orient = 'horizontal' if orient.startswith('h') else 'vertical'
         except TclError:
             orient = None
 
