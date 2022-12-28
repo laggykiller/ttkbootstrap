@@ -31,7 +31,7 @@ def image_draw(size, mode=None, *args):
 class ThemeEngine:
 
     def __init__(self, name, base, style):
-        self._theme_assets = dict()
+        self._theme_assets = {'fonts': list()}
         self._handlers = dict()
         self._styles = dict()
         self._name = name
@@ -95,7 +95,10 @@ class ThemeEngine:
     def create_named_fonts(self):
         raise NotImplemented
 
-    def register_assets(self, scheme, *asset):
-        if scheme not in self._theme_assets:
-            self._theme_assets[scheme] = set()
-        self._theme_assets[scheme].update(asset)
+    def register_assets(self, key, *asset):
+        if key not in self._theme_assets:
+            self._theme_assets[key] = set()
+        if isinstance(self._theme_assets[key], list):
+            self._theme_assets[key].extend(asset)
+        else:
+            self._theme_assets[key].update(asset)
