@@ -10,6 +10,7 @@ class ChromatkEngine(ThemeEngine):
 
     def __init__(self, style):
         super().__init__('chromatk', 'clam', style)
+        self.create_named_fonts()
         self.register_keywords()
 
     def register_keywords(self):
@@ -51,14 +52,15 @@ class ChromatkEngine(ThemeEngine):
         def s(x):
             return self.scale_size(-x * scaling_factor)
 
-        Font(name='TkCaption', family='Segoe UI', size=s(12))
-        Font(name='TkBody', family='Segoe UI', size=s(14))
-        Font(name='TkBodyStrong', family='Segoe UI Semibold', size=s(14))
-        Font(name='TkBodyLarge', family='Segoe UI', size=s(18))
-        Font(name='TkSubtitle', family='Segoe UI Semibold', size=s(20))
-        Font(name='TkTitle', family='Segoe UI Semibold', size=s(28))
-        Font(name='TkTitleLarge', family='Segoe UI Semibold', size=s(40))
-        Font(name='TkDisplay', family='Segoe UI Semibold', size=s(68))
+        self.register_assets('fonts',
+            Font(name='TkCaption', family='Segoe UI', size=s(12)),
+            Font(name='TkBody', family='Segoe UI', size=s(14)),
+            Font(name='TkBodyStrong', family='Segoe UI Semibold', size=s(14)),
+            Font(name='TkBodyLarge', family='Segoe UI', size=s(18)),
+            Font(name='TkSubtitle', family='Segoe UI Semibold', size=s(20)),
+            Font(name='TkTitle', family='Segoe UI Semibold', size=s(28)),
+            Font(name='TkTitleLarge', family='Segoe UI Semibold', size=s(40)),
+            Font(name='TkDisplay', family='Segoe UI Semibold', size=s(68)))
 
     def create_window_style(self, options):
         """Style the application main window"""
@@ -93,10 +95,10 @@ class ChromatkEngine(ThemeEngine):
         pressed = shades.l2 if scheme.mode == LIGHT else shades.d2
         disabled = shades.l2
 
-        img_size = ss(800, 400)
-        final_size = ss(200, 100)
-        common = {'xy': ss(10, 10, 790, 390), 'radius': ss(16),
-                  'outline': shades.d2, 'width': ss(3)}
+        img_size = 800, 800
+        final_size = 36, 36
+        common = {'xy': (10, 10, 790, 790), 'radius': 96, 'outline': shades.d2,
+                  'width': 4}
 
         # normal image
         im, draw = image_draw(img_size)
@@ -113,10 +115,11 @@ class ChromatkEngine(ThemeEngine):
         draw.rounded_rectangle(**common, fill=pressed)
         img_pressed = image_resize(im, final_size)
 
+        self.register_assets(scheme.name, img_norm, img_hover, img_pressed)
+
         # button image element
         elem = self.style.element_image_builder(
-            f'{ttkstyle}.button', img_norm, sticky=NSEW, border=ss(6),
-            width=ss(200), height=ss(50))
+            f'{ttkstyle}.button', img_norm, sticky=NSEW, border=5)
         elem.map('pressed !disabled', img_pressed)
         elem.map('hover !disabled', img_hover)
         elem.build()
@@ -124,16 +127,15 @@ class ChromatkEngine(ThemeEngine):
         # button layout
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
-            Element(f'{ttkstyle}.button', expand=True), [
+            Element(f'{ttkstyle}.button'), [
                 Element('Button.padding'), [
-                    Element('Button.label', expand=True)]]])
-
-        self.register_assets(scheme.name, img_norm, img_hover, img_pressed)
+                    Element('Button.label', side=LEFT, expand=True)]]])
 
         # normal state
         self.style.configure(
             style=ttkstyle, foreground=foreground, focuscolor=foreground,
-            relief=RAISED, anchor=CENTER, padding='8 4')
+            relief=RAISED, anchor=CENTER, font='TkBody', padding='8 2',
+            width=12)
 
         # state map
         self.style.state_map(ttkstyle, 'foreground', [
@@ -157,30 +159,30 @@ class ChromatkEngine(ThemeEngine):
         hover_bg = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
 
         # create style assets
-        img_size = ss(800, 400)
-        final_size = ss(200, 100)
-        common = {'xy': ss(10, 10, 790, 390), 'radius': ss(16)}
+        img_size = 800, 800
+        final_size = 36, 36
+        common = {'xy': (10, 10, 790, 790), 'radius': 96}
 
         # normal image
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=background, width=ss(4))
+        draw.rounded_rectangle(**common, outline=background, width=6)
         img_norm = image_resize(im, final_size)
 
         # hover image
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=background, width=ss(4), fill=hover_bg)
+        draw.rounded_rectangle(**common, outline=background, width=4,
+                               fill=hover_bg)
         img_hover = image_resize(im, final_size)
 
         # pressed image
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=background, width=ss(4), fill=hover_bg)
+        draw.rounded_rectangle(**common, outline=background, width=4,
+                               fill=hover_bg)
         img_pressed = image_resize(im, final_size)
 
         # disable image
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(**common, outline=disabled, width=ss(2))
+        draw.rounded_rectangle(**common, outline=disabled, width=2)
         img_disabled = image_resize(im, final_size)
 
         self.register_assets(scheme.name, img_norm, img_hover, img_pressed,
@@ -189,8 +191,7 @@ class ChromatkEngine(ThemeEngine):
         # button image element
         el_name = f'{ttkstyle}.button'
         elem = self.style.element_image_builder(
-            name=el_name, image=img_norm, sticky=NSEW, border=ss(6),
-            width=ss(200), height=ss(50))
+            el_name, image=img_norm, sticky=NSEW, border=5)
         elem.map('disabled', img_disabled)
         elem.map('pressed !disabled', img_pressed)
         elem.map('hover !disabled', img_hover)
@@ -204,9 +205,9 @@ class ChromatkEngine(ThemeEngine):
                     Element('Button.label', side=LEFT, expand=True)]]])
 
         # normal state
-        self.style.configure(
-            style=ttkstyle, foreground=foreground, relief=RAISED,
-            focuscolor=foreground, anchor=CENTER, padding='8 4')
+        self.style.configure(ttkstyle, foreground=foreground, relief=RAISED,
+                             focuscolor=foreground, anchor=CENTER, width=12,
+                             padding='8 2')
 
         # state map
         self.style.state_map(ttkstyle, 'foreground', [
@@ -230,24 +231,22 @@ class ChromatkEngine(ThemeEngine):
         # normal state
         self.style.configure(
             style=ttkstyle, relief=RAISED, foreground=foreground,
-            padding='8 4', anchor=CENTER)
+            anchor=CENTER, font='TkBody', padding='8 2', width=12)
 
         # normal image
-        im = PhotoImage(Image.new('RGBA', ss(200, 100)))
+        im = PhotoImage(Image.new('RGBA', (36, 36)))
+        self.register_assets(scheme.name, im)
 
         # button image element
-        self.style.element_image_builder(
-            name=f'{ttkstyle}.button', image=im, sticky=NSEW, border=ss(6),
-            width=ss(200), height=ss(50)).build()
-
-        self.register_assets(scheme.name, im)
+        self.style.element_create(f'{ttkstyle}.button', 'image', im,
+                                  sticky=NSEW)
 
         # button layout
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
-            Element(f'{ttkstyle}.button', expand=True), [
+            Element(f'{ttkstyle}.button'), [
                 Element('Button.padding'), [
-                    Element('Button.label', expand=True)]]])
+                    Element('Button.label', side=LEFT, expand=True)]]])
 
         # state style maps
         self.style.state_map(ttkstyle, 'foreground', [
@@ -259,7 +258,6 @@ class ChromatkEngine(ThemeEngine):
             ('hover', hover)])
 
     def create_checkbutton_style(self, options):
-        ss = self.scale_size
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'primary'
@@ -280,103 +278,101 @@ class ChromatkEngine(ThemeEngine):
         pressed_on = shades.l2 if scheme.mode == LIGHT else shades.d2
 
         # create checkbutton assets
-        img_size = ss(640, 640)
-        final_size = ss(32, 32)
-        rect_size = ss(10, 10, 630, 630)
-        radius = img_size[0] * 0.12
+        img_size = 640, 640
+        final_size = 28, 28
+        rect_size = 10, 10, 630, 630
+        radius = 76
         common = {'xy': rect_size, 'radius': radius}
 
         # off
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=outline, fill=app_bg, width=ss(24))
+        draw.rounded_rectangle(**common, outline=outline, fill=app_bg,
+                               width=24)
         img_off = image_resize(im, final_size)
+        im.resize(final_size, Image.LANCZOS).save('checkbutton_off.png')
 
         # off/hover
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=outline, fill=hover_off, width=ss(24))
+        draw.rounded_rectangle(**common, outline=outline, fill=hover_off,
+                               width=24)
         img_off_hover = image_resize(im, final_size)
 
         # off/pressed
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=outline, fill=pressed_off, width=ss(24))
+        draw.rounded_rectangle(**common, outline=outline, fill=pressed_off,
+                               width=24)
         img_off_pressed = image_resize(im, final_size)
 
         # on
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=shades_bg.d2, fill=background, width=ss(3))
-        draw.line(ss(190, 330, 293, 433, 516, 210), width=ss(40),
-                  fill=foreground, joint='curve')
+        draw.rounded_rectangle(**common, outline=shades_bg.d2, fill=background,
+                               width=3)
+        draw.line((190, 330, 293, 433, 516, 210), width=40, fill=foreground,
+                  joint='curve')
         img_on = image_resize(im, final_size)
 
         # on/hover
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=shades_bg.d2, fill=hover_on, width=ss(3))
-        draw.line(ss(190, 330, 293, 433, 516, 210), width=ss(40),
-                  fill=foreground, joint='curve')
+        draw.rounded_rectangle(**common, outline=shades_bg.d2, fill=hover_on,
+                               width=3)
+        draw.line((190, 330, 293, 433, 516, 210), width=40, fill=foreground,
+                  joint='curve')
         img_on_hover = image_resize(im, final_size)
 
         # on/pressed
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=shades_bg.d2, fill=pressed_on, width=ss(3))
-        draw.line(ss(190, 330, 293, 433, 516, 210), width=ss(40),
-                  fill=foreground, joint='curve')
+        draw.rounded_rectangle(**common, outline=shades_bg.d2, fill=pressed_on,
+                               width=3)
+        draw.line((190, 330, 293, 433, 516, 210), width=40, fill=foreground,
+                  joint='curve')
         img_on_pressed = image_resize(im, final_size)
 
         # on/disabled
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=disabled, fill=background, width=ss(3))
-        draw.line(ss(190, 330, 293, 433, 516, 210), width=ss(40),
-                  fill=disabled, joint='curve')
+        draw.rounded_rectangle(**common, outline=disabled, fill=background,
+                               width=3)
+        draw.line((190, 330, 293, 433, 516, 210), width=40, fill=disabled,
+                  joint='curve')
         img_on_dis = image_resize(im, final_size)
 
         # alt
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=shades_bg.d2, fill=background, width=ss(3))
-        draw.line(ss(213, 320, 427, 320), width=ss(40), fill=foreground)
+        draw.rounded_rectangle(**common, outline=shades_bg.d2, fill=background,
+                               width=3)
+        draw.line((213, 320, 427, 320), width=40, fill=foreground)
         img_alt = image_resize(im, final_size)
 
         # alt
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=shades_bg.d2, fill=pressed_on, width=ss(3))
-        draw.line(ss(213, 320, 427, 320), width=ss(40), fill=foreground)
+        draw.rounded_rectangle(**common, outline=shades_bg.d2, fill=pressed_on,
+                               width=3)
+        draw.line((213, 320, 427, 320), width=40, fill=foreground)
         img_alt_pressed = image_resize(im, final_size)
 
         # alt
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=shades_bg.d2, fill=hover_on, width=ss(3))
-        draw.line(ss(213, 320, 427, 320), width=ss(40), fill=foreground)
+        draw.rounded_rectangle(**common, outline=shades_bg.d2, fill=hover_on,
+                               width=3)
+        draw.line((213, 320, 427, 320), width=40, fill=foreground)
         img_alt_hover = image_resize(im, final_size)
 
         # alt/disabled
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=disabled, fill=background, width=ss(3))
-        draw.line(ss(213, 320, 427, 320), width=ss(40), fill=disabled)
+        draw.rounded_rectangle(**common, outline=disabled, fill=background,
+                               width=3)
+        draw.line((213, 320, 427, 320), width=40, fill=disabled)
         img_alt_dis = image_resize(im, final_size)
 
         # disabled
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(
-            **common, outline=disabled, fill=foreground, width=ss(12))
+        draw.rounded_rectangle(**common, outline=disabled, fill=foreground,
+                               width=12)
         img_dis = image_resize(im, final_size)
 
         # create image element
-        element = ttkstyle.replace('.TC', '.C')
-
+        indicator = ttkstyle.replace('.TC', '.C') + '.indicator'
         elem = self.style.element_image_builder(
-            name=f'{element}.indicator', image=img_on, border=ss(24, 0),
-            sticky=NS)
-
+            indicator, img_on, width=34, sticky=W)
         elem.map('disabled selected', img_on_dis)
         elem.map('disabled alternate', img_alt_dis)
         elem.map('disabled', img_dis)
@@ -399,22 +395,20 @@ class ChromatkEngine(ThemeEngine):
         # normal state style
         self.style.configure(style=ttkstyle, foreground=scheme.foreground,
                              background=scheme.background, focuscolor='',
-                             font='TKBody')
+                             font='TkBody', padding=4)
 
         # state mapping
-        self.style.state_map(style=ttkstyle, option='foreground', statespec=[
-            ('disabled', disabled)])
+        self.style.state_map(ttkstyle, 'foreground', [('disabled', disabled)])
 
         # style layout
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
-            Element('Checkbutton.padding', sticky=NSEW), [
-                Element(f'{element}.indicator', side=LEFT, sticky=''),
-                Element('Checkbutton.focus', side=LEFT, sticky='')], [
-                    Element('Checkbutton.label', sticky=NSEW)]])
+            Element('Checkbutton.button'), [
+                Element('Checkbutton.padding'), [
+                    Element(indicator, side=LEFT, sticky=''),
+                    Element('Checkbutton.label', side=RIGHT, expand=True)]]])
 
     def create_radiobutton_style(self, options):
-        ss = self.scale_size
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'primary'
@@ -434,67 +428,58 @@ class ChromatkEngine(ThemeEngine):
 
         # create radiobutton assets
         img_size = 640, 640
-        final_size = ss(32, 32)
-        ellipse_size = ss(10, 10, 630, 630)
+        final_size = 28, 28
+        ellipse_size = 10, 10, 630, 630
 
         # off
         im, draw = image_draw(img_size)
-        draw.ellipse(ellipse_size, outline=outline, fill=app_bg,
-                     width=ss(24))
+        draw.ellipse(ellipse_size, outline=outline, fill=app_bg, width=24)
         img_off = image_resize(im, final_size)
 
         # off/hover
         im, draw = image_draw(img_size)
-        draw.ellipse(ellipse_size, outline=outline, fill=hover_off,
-                     width=ss(24))
+        draw.ellipse(ellipse_size, outline=outline, fill=hover_off, width=24)
         img_off_hover = image_resize(im, final_size)
 
         # off/pressed
         im, draw = image_draw(img_size)
-        draw.ellipse(ellipse_size, outline=outline, fill=app_bg,
-                     width=ss(140))
-        draw.ellipse(ellipse_size, outline=outline, width=ss(24))  # outer
+        draw.ellipse(ellipse_size, outline=outline, fill=app_bg, width=140)
+        draw.ellipse(ellipse_size, outline=outline, width=24)  # outer
         img_off_pressed = image_resize(im, final_size)
 
         # on
         im, draw = image_draw(img_size)
-        draw.ellipse(ellipse_size, outline=background, fill=app_bg,
-                     width=ss(140))
-        draw.ellipse(ellipse_size, outline=shades.d2, width=ss(3))  # outer
+        draw.ellipse(ellipse_size, outline=background, fill=app_bg, width=140)
+        draw.ellipse(ellipse_size, outline=shades.d2, width=3)  # outer
         img_on = image_resize(im, final_size)
 
         # on/hover
         im, draw = image_draw(img_size)
-        draw.ellipse(ellipse_size, outline=hover_on, fill=app_bg,
-                     width=ss(110))
-        draw.ellipse(ellipse_size, outline=shades.d2, width=ss(3))  # outer
+        draw.ellipse(ellipse_size, outline=hover_on, fill=app_bg, width=110)
+        draw.ellipse(ellipse_size, outline=shades.d2, width=3)  # outer
         img_on_hover = image_resize(im, final_size)
 
         # on/pressed
         im, draw = image_draw(img_size)
         draw.ellipse(ellipse_size, outline=pressed_on, fill=app_bg,
-                     width=ss(140))
-        draw.ellipse(ellipse_size, outline=shades.d2, width=ss(3))  # outer
+                     width=140)
+        draw.ellipse(ellipse_size, outline=shades.d2, width=3)  # outer
         img_on_pressed = image_resize(im, final_size)
 
         # radio on/disabled
         im, draw = image_draw(img_size)
-        draw.ellipse(ellipse_size, outline=disabled, fill=app_bg,
-                     width=ss(140))
-        draw.ellipse(ellipse_size, outline=outline, width=ss(3))  # outer
+        draw.ellipse(ellipse_size, outline=disabled, fill=app_bg, width=140)
+        draw.ellipse(ellipse_size, outline=outline, width=3)  # outer
         img_on_dis = image_resize(im, final_size)
 
         # radio disabled
         im, draw = image_draw(img_size)
-        draw.ellipse(ellipse_size, outline=disabled, fill=app_bg,
-                     width=ss(24))
+        draw.ellipse(ellipse_size, outline=disabled, fill=app_bg, width=24)
         img_dis = image_resize(im, final_size)
 
         # create image elements
-        borderpad = ss(24, 0)
-
         elem = self.style.element_image_builder(
-            f'{ttkstyle}.indicator', img_on, border=borderpad, sticky=NS)
+            f'{ttkstyle}.indicator', img_on, width=34, sticky=W)
         elem.map('disabled selected', img_on_dis)
         elem.map('disabled', img_dis)
         elem.map('pressed !selected !disabled', img_off_pressed)
@@ -512,7 +497,7 @@ class ChromatkEngine(ThemeEngine):
         # normal style
         self.style.configure(
             ttkstyle, font='TkBody', foreground=scheme.foreground,
-            background=scheme.background, focuscolor='')
+            background=scheme.background, focuscolor='', padding=4)
 
         # state mapping
         self.style.state_map(ttkstyle, 'foreground', [
@@ -521,13 +506,11 @@ class ChromatkEngine(ThemeEngine):
         # style layout
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
-            Element('Radiobutton.padding', sticky=NSEW), [
+            Element('Radiobutton.padding'), [
                 Element(f'{ttkstyle}.indicator', side=LEFT),
-                Element('Radiobutton.focus', side=LEFT, sticky=NSEW)], [
-                    Element('Radiobutton.label', side=LEFT)]])
+                Element('Radiobutton.label', side=RIGHT, expand=True)]])
 
     def create_switch_style(self, options):
-        ss = self.scale_size
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'primary'
@@ -544,78 +527,77 @@ class ChromatkEngine(ThemeEngine):
         pressed_on = shades[2] if scheme.mode == LIGHT else shades.d2
 
         # create radiobutton assets
-        final_size = ss(60, 30)
-        img_size = ss(1200, 600)
-        outer_rect = ss(10, 10, 1190, 590)
-        inner_rect = ss(622, 34, 1166, 566)
+        final_size = 56, 28
+        img_size = 1200, 600
+        outer_rect = 10, 10, 1190, 590
+        inner_rect = 622, 34, 1166, 566
 
         # off - normal
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(outer_rect, outline=outline, width=ss(24),
-                               fill=app_bg, radius=ss(300))
-        draw.rounded_rectangle(inner_rect, outline=app_bg, width=ss(80),
-                               fill=outline, radius=ss(290))
+        draw.rounded_rectangle(outer_rect, outline=outline, width=24,
+                               fill=app_bg, radius=300)
+        draw.rounded_rectangle(inner_rect, outline=app_bg, width=80,
+                               fill=outline, radius=290)
         img_off = image_resize(im.rotate(180), final_size)
 
         # off - hover
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(outer_rect, outline=outline, width=ss(24),
-                               fill=app_bg, radius=ss(300))
-        draw.rounded_rectangle(inner_rect, outline=app_bg, width=ss(60),
-                               fill=outline, radius=ss(290))
+        draw.rounded_rectangle(outer_rect, outline=outline, width=24,
+                               fill=app_bg, radius=300)
+        draw.rounded_rectangle(inner_rect, outline=app_bg, width=60,
+                               fill=outline, radius=290)
         img_off_hover = image_resize(im.rotate(180), final_size)
 
         # off - pressed
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(outer_rect, outline=outline, width=ss(24),
-                               fill=app_bg, radius=ss(300))
-        draw.rounded_rectangle(ss(500, 34, 1100, 566), outline=app_bg,
-                               width=ss(60), fill=outline, radius=ss(290))
+        draw.rounded_rectangle(outer_rect, outline=outline, width=24,
+                               fill=app_bg, radius=300)
+        draw.rounded_rectangle((500, 34, 1100, 566), outline=app_bg,
+                               width=60, fill=outline, radius=290)
         img_off_pressed = image_resize(im.rotate(180), final_size)
 
         # on - normal
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(outer_rect, outline=shades.d2, width=ss(6),
-                               fill=background, radius=ss(300))
-        draw.rounded_rectangle(inner_rect, outline=background, width=ss(80),
-                               fill=app_bg, radius=ss(290))
+        draw.rounded_rectangle(outer_rect, outline=shades.d2, width=6,
+                               fill=background, radius=300)
+        draw.rounded_rectangle(inner_rect, outline=background, width=80,
+                               fill=app_bg, radius=290)
         img_on = image_resize(im, final_size)
 
         # on - hover
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(outer_rect, outline=shades.d2, width=ss(6),
-                               fill=hover_on, radius=ss(300))
-        draw.rounded_rectangle(inner_rect, outline=hover_on, width=ss(60),
-                               fill=app_bg, radius=ss(290))
+        draw.rounded_rectangle(outer_rect, outline=shades.d2, width=6,
+                               fill=hover_on, radius=300)
+        draw.rounded_rectangle(inner_rect, outline=hover_on, width=60,
+                               fill=app_bg, radius=290)
         img_on_hover = image_resize(im, final_size)
 
         # on - pressed
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(outer_rect, fill=pressed_on, radius=ss(300))
-        draw.rounded_rectangle(ss(500, 34, 1100, 566), outline=pressed_on,
-                               width=ss(60), fill=app_bg, radius=ss(290))
+        draw.rounded_rectangle(outer_rect, fill=pressed_on, radius=300)
+        draw.rounded_rectangle((500, 34, 1100, 566), outline=pressed_on,
+                               width=60, fill=app_bg, radius=290)
         img_on_pressed = image_resize(im, final_size)
 
         # off - disabled
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(outer_rect, outline=disabled, width=ss(24),
-                               fill=app_bg, radius=ss(300))
-        draw.rounded_rectangle(inner_rect, outline=app_bg, width=ss(80),
-                               fill=disabled, radius=ss(290))
+        draw.rounded_rectangle(outer_rect, outline=disabled, width=24,
+                               fill=app_bg, radius=300)
+        draw.rounded_rectangle(inner_rect, outline=app_bg, width=80,
+                               fill=disabled, radius=290)
         img_off_dis = image_resize(im.rotate(180), final_size)
 
         # on - disabled
         im, draw = image_draw(img_size)
-        draw.rounded_rectangle(outer_rect, outline=outline, width=ss(6),
-                               fill=disabled, radius=ss(300))
-        draw.rounded_rectangle(inner_rect, outline=disabled, width=ss(80),
-                               fill=app_bg, radius=ss(290))
+        draw.rounded_rectangle(outer_rect, outline=outline, width=6,
+                               fill=disabled, radius=300)
+        draw.rounded_rectangle(inner_rect, outline=disabled, width=80,
+                               fill=app_bg, radius=290)
         img_on_dis = image_resize(im, final_size)
 
         # style element
-        elem = self.style.element_image_builder(
-            f'{ttkstyle}.indicator', img_on, width=60, height=30,
-            padding='0 0 75 0', sticky='')
+        elem = self.style.element_image_builder(f'{ttkstyle}.indicator',
+                                                img_on, width=62, sticky=W)
         elem.map('disabled !selected', img_off_dis)
         elem.map('disabled selected', img_on_dis)
         elem.map('!selected pressed', img_off_pressed)
@@ -633,15 +615,14 @@ class ChromatkEngine(ThemeEngine):
         # style layout
         layout = self.style.element_layout_builder(ttkstyle)
         layout.build([
-            Element('Toolbutton.border', sticky=NSEW), [
-                Element('Toolbutton.padding', sticky=NSEW), [
+            Element('Toolbutton.border'), [
+                Element('Toolbutton.padding'), [
                     Element(f'{ttkstyle}.indicator', side=LEFT),
                     Element('Toolbutton.label', side=RIGHT, expand=True)]]])
 
         # normal style
-        self.style.configure(
-            ttkstyle, relief=FLAT, borderwidth=0, foreground=scheme.foreground,
-            background=scheme.background)
+        self.style.configure(ttkstyle, foreground=scheme.foreground,
+                             background=scheme.background, padding='8 2')
 
         # state map
         self.style.state_map(ttkstyle, 'foreground', [
@@ -1342,7 +1323,7 @@ class ChromatkEngine(ThemeEngine):
         # notebook tab element
         e_name = ttkstyle.replace('TN', 'N')
         elem = self.style.element_image_builder(
-            f'{e_name}.tab', image=img_tab_on, border=ss(13, 13, 10, 0),
+            f'{e_name}.tab', image=img_tab_on, border=ss(6, 6, 6, 0),
             padding=ss(16, 14, 14, 6), height=ss(end_size[0]))
         elem.map('!selected', img_tab_off)
         elem.build()
@@ -1355,13 +1336,14 @@ class ChromatkEngine(ThemeEngine):
                                outline=bordercolor, width=ss(24),
                                fill=inactive_bg)
         img_border = image_resize(im, final_size)
+        im.resize(end_size, Image.LANCZOS).save('.notebook-border.png')
 
         self.register_assets(scheme.name, img_tab_on, img_tab_off, img_border)
 
         # notebook border element
         self.style.element_create(f'{e_name}.border', 'image', img_border,
-                                  sticky=NSEW, border=ss(6), width=ss(200),
-                                  height=ss(50))
+                                  sticky=NSEW, border=ss(6, 6, 6, 0),
+                                  width=ss(64), height=ss(64))
 
         # notebook layout
         layout = self.style.element_layout_builder(ttkstyle)
