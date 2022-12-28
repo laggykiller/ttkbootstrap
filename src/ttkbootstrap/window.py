@@ -6,9 +6,9 @@
 import tkinter
 from ttkbootstrap.utils import utility
 from ttkbootstrap.constants import *
-from ttkbootstrap.publisher import Publisher
 from ttkbootstrap.style.style import Style
 from ttkbootstrap.icons import Icon
+from ttkbootstrap.widget.widget import TKWidget
 
 
 def get_default_root(what=None):
@@ -59,7 +59,7 @@ def apply_class_bindings(window: tkinter.Widget):
 def apply_all_bindings(window: tkinter.Widget):
     """Add bindings to all widgets in the application"""
     window.bind_all('<Map>', on_map_child, '+')
-    window.bind_all('<Destroy>', lambda e: Publisher.unsubscribe(e.widget))
+    # window.bind_all('<Destroy>', lambda e: Publisher.unsubscribe(e.widget))
 
 
 def on_disabled_readonly_state(event):
@@ -111,7 +111,7 @@ def on_select_all(event):
     return 'break'    
 
 
-class Window(tkinter.Tk):
+class Window(tkinter.Tk, TKWidget):
     """A class that wraps the tkinter.Tk class in order to provide a
     more convenient api with additional bells and whistles. For more
     information on how to use the inherited `Tk` methods, see the
@@ -131,7 +131,7 @@ class Window(tkinter.Tk):
     def __init__(
         self,
         title="ttkbootstrap",
-        themename="litera",
+        themename="superhero",
         iconphoto='',
         size=None,
         position=None,
@@ -219,7 +219,10 @@ class Window(tkinter.Tk):
         if hdpi:
             utility.enable_high_dpi_awareness()
 
-        super().__init__()
+        tkinter.Tk.__init__(self)
+        TKWidget.__init__(self)
+        self.update_widget_style()
+
         self.winsys = self.tk.call('tk', 'windowingsystem')
 
         if scaling is not None:
@@ -276,7 +279,8 @@ class Window(tkinter.Tk):
 
         apply_class_bindings(self)
         apply_all_bindings(self)
-        self._style = Style(themename)
+        self._style = Style(self)
+        self._style.theme_use(themename)
 
 
     @property
@@ -475,7 +479,7 @@ class Toplevel(tkinter.Toplevel):
     @property
     def style(self):
         """Return a reference to the `ttkbootstrap.style.Style` object."""
-        return Style()
+        return self._style
 
     def place_window_center(self):
         """Position the toplevel in the center of the screen. Does not
