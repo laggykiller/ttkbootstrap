@@ -53,8 +53,11 @@ class Style(ttkStyle):
 
         # existing theme (long name)
         if themename in self.theme_names():
-            self._current_theme = self._themes[themename]
-            super().theme_use(themename)
+            try:
+                self._current_theme = self._themes[themename]
+            except KeyError:
+                # legacy theme
+                return super().theme_use(themename)
             return Publisher.dispatch('theme-changed')
 
         theme = self._find_theme_scheme_engine(themename)
