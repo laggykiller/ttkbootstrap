@@ -7,6 +7,7 @@ from .label import Label
 from .labelframe import Labelframe
 from .menubutton import Menubutton
 from .notebook import Notebook
+from .panedwindow import Panedwindow
 from .progressbar import Progressbar
 from .radiobutton import Radiobutton
 from .scale import Scale
