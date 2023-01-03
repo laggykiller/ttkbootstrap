@@ -93,6 +93,10 @@ CHEVRON_LINE_RECT = 20, 20, 735, 735, 700, 700, 1380, 20
 # paned window sizes
 PW_SASH_THICKNESS = 2
 
+# separator sizes
+SEP_BUILD_SIZE = 1000, 1
+SEP_LINE_WIDTH = 1
+
 
 class ChromatkEngine(ThemeEngine):
 
@@ -983,7 +987,6 @@ class ChromatkEngine(ThemeEngine):
 
     def create_separator_style(self, options):
         """Create a separator style"""
-        ss = self.scale_size
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'light'
@@ -993,24 +996,29 @@ class ChromatkEngine(ThemeEngine):
         shades = scheme.get_shades(colorname)
         background = shades.d3 if colorname == LIGHT else shades.base
 
+        # create style assets
+        im = Image.new('RGB', SEP_BUILD_SIZE, background)
+
         if options['orient'] == HORIZONTAL:
-            size = ss(40, 1)
-            sticky = EW
+            build_size = SEP_BUILD_SIZE
+            width = MINIMUM_WIDTH
+            height = 0
+            side = LEFT
         else:
-            size = ss(1, 40)
-            sticky = NS
+            build_size = tuple(reversed(SEP_BUILD_SIZE))
+            height = MINIMUM_WIDTH
+            width = 0
+            side = BOTTOM
 
-        img = PhotoImage(image=Image.new('RGB', size, background))
+        img = PhotoImage(image=Image.new('RGB', build_size, background))
         self.register_assets(scheme.name, img)
-
-        name = scheme.name + '.' + ttkstyle.replace('.TS', '.S') + '.separator'
-        if name in self.style.element_names():
-            return
+        separator_name = f'{ttkstyle}.separator'
 
         # style elements and layout
-        self.style.element_create(name, 'image', str(img))
-        self.style.element_layout_builder(name).build([
-            Element('separator', sticky=sticky)])
+        self.element_create(separator_name, 'image', img, width=width,
+                            height=height, border=SEP_LINE_WIDTH)
+        self.layout_builder(ttkstyle).build([
+            Element(separator_name, side=side, expand=True)])
 
     def create_entry_style(self, options):
         """Create an entry style"""
