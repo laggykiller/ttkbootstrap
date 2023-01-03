@@ -18,8 +18,11 @@ if TYPE_CHECKING:
     from ttkbootstrap.style.style import Style
 
 
-def image_resize(img, size):
-    return PhotoImage(image=img.resize(size, Image.BICUBIC))
+def image_resize(img, size, orient=None):
+    if orient is None or orient == 'horizontal':
+        return PhotoImage(image=img.resize(size, Image.BICUBIC))
+    else:
+        return PhotoImage(image=img.rotate(180).resize(size, Image.BICUBIC))
 
 
 def image_draw(size, mode=None, *args):
@@ -58,7 +61,7 @@ class ThemeEngine:
             return False
         return name in self._styles.get(scheme)
 
-    def style_register(self, name, scheme):
+    def register_style(self, name, scheme):
         if scheme not in self._styles:
             self._styles[scheme] = set()
         self._styles[scheme].add(name)
@@ -102,3 +105,18 @@ class ThemeEngine:
             self._theme_assets[key].extend(asset)
         else:
             self._theme_assets[key].update(asset)
+
+    def element_builder(self, name, image, **kw):
+        return self.style.element_image_builder(name, image, **kw)
+
+    def layout_builder(self, style):
+        return self.style.element_layout_builder(style)
+
+    def element_create(self, name, etype, *args, **kw):
+        return self.style.element_create(name, etype, *args, **kw)
+
+    def configure(self, style, **kw):
+        return self.style.configure(style, **kw)
+
+    def map(self, style, option, statespec):
+        return self.style.state_map(style, option, statespec)
