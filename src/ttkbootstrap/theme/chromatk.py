@@ -5,6 +5,10 @@ from ttkbootstrap.constants import *
 from ttkbootstrap.style.element import ElementLayout as Element
 from tkinter.font import Font
 
+# TODO standardize focus effects on elements
+# TODO define and create chevron element once in setup script
+# TODO remove builder methods from Style class and implement in Engine
+
 MINIMUM_WIDTH = 120  # pixels
 
 # button style constants
@@ -88,6 +92,8 @@ CHEVRON_LINE_RECT = 20, 20, 735, 735, 700, 700, 1380, 20
 
 # paned window sizes
 PW_SASH_THICKNESS = 2
+
+
 class ChromatkEngine(ThemeEngine):
 
     def __init__(self, style):
@@ -229,7 +235,6 @@ class ChromatkEngine(ThemeEngine):
         self.map(ttkstyle, 'shiftrelief', [('pressed !disabled', -1)])
 
     def create_outline_button_style(self, options):
-        ss = self.scale_size
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'primary'
@@ -1009,7 +1014,6 @@ class ChromatkEngine(ThemeEngine):
 
     def create_entry_style(self, options):
         """Create an entry style"""
-        ss = self.scale_size
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'light'
@@ -1088,7 +1092,6 @@ class ChromatkEngine(ThemeEngine):
 
     def create_combobox_style(self, options):
         """Create a combobox style"""
-        ss = self.scale_size
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'light'
@@ -1224,7 +1227,6 @@ class ChromatkEngine(ThemeEngine):
 
     def create_menubutton_style(self, options):
         """Create the default menubutton style"""
-        ss = self.scale_size
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'primary'
@@ -1301,7 +1303,6 @@ class ChromatkEngine(ThemeEngine):
 
     def create_outline_menubutton_style(self, options):
         """Create an outline menubutton style"""
-        ss = self.scale_size
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'primary'
