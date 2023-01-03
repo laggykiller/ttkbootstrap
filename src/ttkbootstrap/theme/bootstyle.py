@@ -65,7 +65,7 @@ class BootstyleEngine(ThemeEngine):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or PRIMARY
-        self.style_register(options['ttkstyle'], scheme)
+        self.register_style(options['ttkstyle'], scheme)
 
         # style colors
         shades = scheme.get_shades(colorname)
@@ -107,7 +107,7 @@ class BootstyleEngine(ThemeEngine):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or PRIMARY
-        self.style_register(options['ttkstyle'], scheme)
+        self.register_style(options['ttkstyle'], scheme)
 
         # style colors
         shades = scheme.get_shades(colorname)
@@ -151,7 +151,7 @@ class BootstyleEngine(ThemeEngine):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or PRIMARY
-        self.style_register(options['ttkstyle'], scheme)
+        self.register_style(options['ttkstyle'], scheme)
 
         # style colors
         shades_lt = scheme.get_shades('light')
@@ -195,7 +195,7 @@ class BootstyleEngine(ThemeEngine):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'primary'
-        self.style_register(options['ttkstyle'], scheme)
+        self.register_style(options['ttkstyle'], scheme)
 
         # style colors
         shades = scheme.get_shades(colorname)
@@ -352,7 +352,7 @@ class BootstyleEngine(ThemeEngine):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'primary'
-        self.style_register(options['ttkstyle'], scheme)
+        self.register_style(options['ttkstyle'], scheme)
 
         # style colors
         shades = scheme.get_shades(colorname)
@@ -465,7 +465,7 @@ class BootstyleEngine(ThemeEngine):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'primary'
-        self.style_register(options['ttkstyle'], scheme)
+        self.register_style(options['ttkstyle'], scheme)
 
         # style colors
         shades = scheme.get_shades(colorname)
@@ -587,7 +587,7 @@ class BootstyleEngine(ThemeEngine):
         orient = str(options['orient']) or VERTICAL
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'light'
-        self.style_register(options['ttkstyle'], scheme)
+        self.register_style(options['ttkstyle'], scheme)
 
         # style colors
         shades_lt = scheme.get_shades(colorname)
@@ -655,7 +655,7 @@ class BootstyleEngine(ThemeEngine):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         colorname = options['color'] or 'light'
-        self.style_register(options['ttkstyle'], scheme)
+        self.register_style(options['ttkstyle'], scheme)
 
         # style colors
         shades = scheme.get_shades(colorname)
