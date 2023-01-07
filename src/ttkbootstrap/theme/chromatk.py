@@ -176,20 +176,20 @@ class ChromatkEngine(ThemeEngine):
         """Create the default button style"""
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'primary'
+        colorname = options['color'] or PRIMARY
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
+        accents = scheme.accents(colorname)
         foreground = scheme.get_foreground(colorname)
-        background = shades.base
-        hover = shades.l1 if scheme.mode == LIGHT else shades.d1
-        pressed = shades.l2 if scheme.mode == LIGHT else shades.d2
-        disabled = shades.l2
+        background = accents.accent
+        hover = accents.light1 if scheme.is_light else accents.dark1
+        pressed = accents.light2 if scheme.is_light else accents.dark1
+        disabled = accents.light2
 
         # create style assets
         common = {'xy': BTN_BORDER_RECT, 'radius': BTN_BUILD_RADIUS,
-                  'outline': shades.d2, 'width': BTN_OUTLINE_WIDTH}
+                  'outline': accents.dark1, 'width': BTN_OUTLINE_WIDTH}
 
         if self.use_rgba:
             draw_settings = (BTN_BUILD_SIZE,)
@@ -241,16 +241,16 @@ class ChromatkEngine(ThemeEngine):
     def create_outline_button_style(self, options):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'primary'
+        colorname = options['color'] or PRIMARY
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_lt = scheme.get_shades('light')
-        shades_bg = scheme.get_shades('background')
-        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
-        background = foreground = shades.base
-        hover_bg = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
+        accents = scheme.accents(colorname)
+        accents_lt = scheme.accents(LIGHT)
+        accents_bg = scheme.accents('background')
+        disabled = accents_lt.dark1 if scheme.is_light else accents_lt.dark4
+        background = foreground = accents.accent
+        hover_bg = accents_bg.light1 if scheme.is_dark else accents_lt.accent
 
         # create style assets
         common = {'xy': BTN_BORDER_RECT, 'radius': BTN_BUILD_RADIUS}
@@ -313,12 +313,12 @@ class ChromatkEngine(ThemeEngine):
     def create_link_button_style(self, options):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'primary'
+        colorname = options['color'] or PRIMARY
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades_lt = scheme.get_shades('light')
-        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
+        accents_lt = scheme.accents(LIGHT)
+        disabled = accents_lt.dark1 if scheme.is_light else accents_lt.dark4
         foreground = scheme.get_color(colorname)
         hover = scheme.info
 
@@ -343,29 +343,29 @@ class ChromatkEngine(ThemeEngine):
     def create_checkbutton_style(self, options):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'primary'
+        colorname = options['color'] or PRIMARY
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_lt = scheme.get_shades('light')
-        shades_bg = scheme.get_shades('background')
+        accents = scheme.accents(colorname)
+        accents_lt = scheme.accents(LIGHT)
+        accents_bg = scheme.accents('background')
         foreground = scheme.background
-        background = shades.base
+        background = accents.accent
         app_bg = scheme.background
-        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
-        outline = shades_lt.d3 if scheme.mode == DARK else shades_lt.d3
-        hover_on = shades.l1 if scheme.mode == LIGHT else shades.d1
-        hover_off = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
-        pressed_off = shades_bg.l2 if scheme.mode == DARK else shades_lt.d1
-        pressed_on = shades.l2 if scheme.mode == LIGHT else shades.d2
+        disabled = accents_lt.dark1 if scheme.is_light else accents_lt.dark4
+        outline = accents_lt.dark3 if scheme.is_dark else accents_lt.dark3
+        hover_on = accents.light1 if scheme.is_light else accents.dark1
+        hover_off = accents_bg.light1 if scheme.is_dark else accents_lt.accent
+        pressed_off = accents_bg.light2 if scheme.is_dark else accents_lt.dark1
+        pressed_on = accents.light2 if scheme.is_light else accents.dark1
 
         # create style assets
         off_common = {'xy': CB_BORDER_RECT, 'radius': CB_BUILD_RADIUS,
                       'width': CB_BORDER_WIDTH, 'outline': outline}
 
         on_common = {'xy': CB_BORDER_RECT, 'radius': CB_BUILD_RADIUS,
-                     'width': 3, 'outline': shades_bg.d2}
+                     'width': 3, 'outline': accents_bg.dark1}
 
         on_line_common = {'xy': CB_CHECK_RECT, 'width': CB_LINE_WIDTH,
                           'fill': foreground, 'joint': 'curve'}
@@ -489,20 +489,20 @@ class ChromatkEngine(ThemeEngine):
     def create_radiobutton_style(self, options):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'primary'
+        colorname = options['color'] or PRIMARY
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_lt = scheme.get_shades('light')
-        shades_bg = scheme.get_shades('background')
+        accents = scheme.accents(colorname)
+        accents_lt = scheme.accents(LIGHT)
+        accents_bg = scheme.accents('background')
         app_bg = scheme.background
-        background = shades.base
-        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
-        outline = shades_lt.d3
-        hover_on = shades.l1 if scheme.mode == LIGHT else shades.d1
-        hover_off = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
-        pressed_on = shades.l2 if scheme.mode == LIGHT else shades.d2
+        background = accents.accent
+        disabled = accents_lt.dark1 if scheme.is_light else accents_lt.dark4
+        outline = accents_lt.dark3
+        hover_on = accents.light1 if scheme.is_light else accents.dark1
+        hover_off = accents_bg.light1 if scheme.is_dark else accents_lt.accent
+        pressed_on = accents.light2 if scheme.is_light else accents.dark1
 
         # create radiobutton assets
         if self.use_rgba:
@@ -532,21 +532,24 @@ class ChromatkEngine(ThemeEngine):
         im, draw = image_draw(*draw_settings)
         draw.ellipse(CB_BORDER_RECT, outline=background, fill=app_bg,
                      width=RB_INNER_WIDTH_1)
-        draw.ellipse(CB_BORDER_RECT, outline=shades.d2, width=RB_OUTER_WIDTH)
+        draw.ellipse(CB_BORDER_RECT, outline=accents.dark1,
+                     width=RB_OUTER_WIDTH)
         img_on = image_resize(im, CB_FINAL_SIZE)
 
         # on/hover
         im, draw = image_draw(*draw_settings)
         draw.ellipse(CB_BORDER_RECT, outline=hover_on, fill=app_bg,
                      width=RB_INNER_WIDTH_2)
-        draw.ellipse(CB_BORDER_RECT, outline=shades.d2, width=RB_OUTER_WIDTH)
+        draw.ellipse(CB_BORDER_RECT, outline=accents.dark1,
+                     width=RB_OUTER_WIDTH)
         img_on_hover = image_resize(im, CB_FINAL_SIZE)
 
         # on/pressed
         im, draw = image_draw(*draw_settings)
         draw.ellipse(CB_BORDER_RECT, outline=pressed_on, fill=app_bg,
                      width=RB_INNER_WIDTH_1)
-        draw.ellipse(CB_BORDER_RECT, outline=shades.d2, width=RB_OUTER_WIDTH)
+        draw.ellipse(CB_BORDER_RECT, outline=accents.dark1,
+                     width=RB_OUTER_WIDTH)
         img_on_pressed = image_resize(im, CB_FINAL_SIZE)
 
         # radio on/disabled
@@ -600,18 +603,18 @@ class ChromatkEngine(ThemeEngine):
     def create_switch_style(self, options):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'primary'
+        colorname = options['color'] or PRIMARY
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_lt = scheme.get_shades('light')
-        background = shades.base
+        accents = scheme.accents(colorname)
+        accents_lt = scheme.accents(LIGHT)
+        background = accents.accent
         app_bg = scheme.background
-        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
-        outline = shades_lt.d3
-        hover_on = shades.l1 if scheme.mode == LIGHT else shades[5]
-        pressed_on = shades[2] if scheme.mode == LIGHT else shades.d2
+        disabled = accents_lt.dark1 if scheme.is_light else accents_lt.dark4
+        outline = accents_lt.dark3
+        hover_on = accents.light1 if scheme.is_light else accents[5]
+        pressed_on = accents[2] if scheme.is_light else accents.dark1
 
         # create style assets
         if self.use_rgba:
@@ -651,7 +654,7 @@ class ChromatkEngine(ThemeEngine):
 
         # on - normal
         im, draw = image_draw(*draw_settings)
-        draw.rounded_rectangle(SW_OUTER_RECT, outline=shades.d2,
+        draw.rounded_rectangle(SW_OUTER_RECT, outline=accents.dark1,
                                width=SW_OUTER_WIDTH_2, fill=background,
                                radius=SW_OUTER_RADIUS)
         draw.rounded_rectangle(SW_INNER_RECT, outline=background,
@@ -661,7 +664,7 @@ class ChromatkEngine(ThemeEngine):
 
         # on - hover
         im, draw = image_draw(*draw_settings)
-        draw.rounded_rectangle(SW_OUTER_RECT, outline=shades.d2,
+        draw.rounded_rectangle(SW_OUTER_RECT, outline=accents.dark1,
                                width=SW_OUTER_WIDTH_2, fill=hover_on,
                                radius=SW_OUTER_RADIUS)
         draw.rounded_rectangle(SW_INNER_RECT, outline=hover_on, fill=app_bg,
@@ -734,16 +737,16 @@ class ChromatkEngine(ThemeEngine):
         """Create a progressbar style"""
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'primary'
+        colorname = options['color'] or PRIMARY
         orient = options['orient']
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_bg = scheme.get_shades('background')
-        background = shades.base
-        outline = shades_bg.d2
-        troughcolor = shades_bg.l2 if scheme.mode == DARK else shades_bg.d1
+        accents = scheme.accents(colorname)
+        accents_bg = scheme.accents('background')
+        background = accents.accent
+        outline = accents_bg.dark1
+        troughcolor = accents_bg.light2 if scheme.is_dark else accents_bg.dark1
 
         # create style assets
         thumb_common = {'xy': SB_THUMB_RECT, 'radius': SB_BUILD_RADIUS}
@@ -798,18 +801,18 @@ class ChromatkEngine(ThemeEngine):
     def create_spinbox_style(self, options):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'light'
+        colorname = options['color'] or LIGHT
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_bg = scheme.get_shades('background')
-        shades_lt = scheme.get_shades('light')
-        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
-        background = shades.d2
+        accents = scheme.accents(colorname)
+        accents_bg = scheme.accents('background')
+        accents_lt = scheme.accents(LIGHT)
+        disabled = accents_lt.dark1 if scheme.is_light else accents_lt.dark4
+        background = accents.dark1
         foreground = scheme.foreground
-        focus_color = scheme.primary if colorname == 'light' else shades.base
-        hover_bg = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
+        focus_color = scheme.primary if colorname == LIGHT else accents.accent
+        hover_bg = accents_bg.light1 if scheme.is_dark else accents_lt.accent
 
         common = {'xy': ENTRY_BORDER_RECT, 'radius': ENTRY_BUILD_RADIUS,
                   'width': ENTRY_OUTLINE_WIDTH}
@@ -822,13 +825,14 @@ class ChromatkEngine(ThemeEngine):
         # field
         im, draw = image_draw(*draw_settings)
         draw.rounded_rectangle(**common, outline=background)
-        draw.line(ENTRY_LINE_RECT, fill=shades.d3, width=ENTRY_UNDERLINE_WIDTH)
+        draw.line(ENTRY_LINE_RECT, fill=accents.dark3,
+                  width=ENTRY_UNDERLINE_WIDTH)
         img_field = image_resize(im, ENTRY_FINAL_SIZE)
 
         # field hover
         im, draw = image_draw(*draw_settings)
         draw.rounded_rectangle(**common, outline=background, fill=hover_bg)
-        draw.line(ENTRY_LINE_RECT, fill=shades.d3,
+        draw.line(ENTRY_LINE_RECT, fill=accents.dark3,
                   width=ENTRY_UNDERLINE_HOVER_WIDTH)
         img_hover = image_resize(im, ENTRY_FINAL_SIZE)
 
@@ -902,7 +906,7 @@ class ChromatkEngine(ThemeEngine):
 
         # normal style
         self.configure(ttkstyle, foreground=foreground, insertcolor=foreground,
-                       selectbackground=shades_bg.base,
+                       selectbackground=accents_bg.accent,
                        selectforeground=foreground, padding=ENTRY_PADDING)
 
         # state style map
@@ -953,14 +957,14 @@ class ChromatkEngine(ThemeEngine):
         ss = self.scale_size
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'light'
+        colorname = options['color'] or LIGHT
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
+        accents = scheme.accents(colorname)
         background = scheme.background
         foreground = scheme.foreground
-        bordercolor = shades.d3
+        bordercolor = accents.dark3
 
         im_size = ss(1600, 1600)
         final_size = ss(64, 64)
@@ -989,16 +993,14 @@ class ChromatkEngine(ThemeEngine):
         """Create a separator style"""
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'light'
+        colorname = options['color'] or LIGHT
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        background = shades.d3 if colorname == LIGHT else shades.base
+        accents = scheme.accents(colorname)
+        background = accents.dark3 if colorname == LIGHT else accents.accent
 
         # create style assets
-        im = Image.new('RGB', SEP_BUILD_SIZE, background)
-
         if options['orient'] == HORIZONTAL:
             build_size = SEP_BUILD_SIZE
             width = MINIMUM_WIDTH
@@ -1024,19 +1026,19 @@ class ChromatkEngine(ThemeEngine):
         """Create an entry style"""
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'light'
+        colorname = options['color'] or LIGHT
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_bg = scheme.get_shades('background')
-        shades_lt = scheme.get_shades('light')
-        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
-        background = shades.d2
+        accents = scheme.accents(colorname)
+        accents_bg = scheme.accents('background')
+        accents_lt = scheme.accents(LIGHT)
+        disabled = accents_lt.dark1 if scheme.is_light else accents_lt.dark4
+        background = accents.dark1
         foreground = scheme.foreground
-        select_fg = scheme.get_foreground('primary')
-        focus_color = scheme.primary if colorname == 'light' else shades.base
-        hover_bg = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
+        select_fg = scheme.get_foreground(PRIMARY)
+        focus_color = scheme.primary if colorname == LIGHT else accents.accent
+        hover_bg = accents_bg.light1 if scheme.is_dark else accents_lt.accent
 
         common = {'xy': ENTRY_BORDER_RECT, 'radius': ENTRY_BUILD_RADIUS,
                   'width': ENTRY_OUTLINE_WIDTH}
@@ -1049,13 +1051,14 @@ class ChromatkEngine(ThemeEngine):
         # entry field
         im, draw = image_draw(*draw_settings)
         draw.rounded_rectangle(**common, outline=background)
-        draw.line(ENTRY_LINE_RECT, fill=shades.d3, width=ENTRY_UNDERLINE_WIDTH)
+        draw.line(ENTRY_LINE_RECT, fill=accents.dark3,
+                  width=ENTRY_UNDERLINE_WIDTH)
         img_field = image_resize(im, ENTRY_FINAL_SIZE)
 
         # entry hover
         im, draw = image_draw(*draw_settings)
         draw.rounded_rectangle(**common, outline=background, fill=hover_bg)
-        draw.line(ENTRY_LINE_RECT, fill=shades.d3,
+        draw.line(ENTRY_LINE_RECT, fill=accents.dark3,
                   width=ENTRY_UNDERLINE_HOVER_WIDTH)
         img_hover = image_resize(im, ENTRY_FINAL_SIZE)
 
@@ -1102,18 +1105,18 @@ class ChromatkEngine(ThemeEngine):
         """Create a combobox style"""
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'light'
+        colorname = options['color'] or LIGHT
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_bg = scheme.get_shades('background')
-        shades_lt = scheme.get_shades('light')
-        disabled = shades_lt.d3 if scheme.mode == LIGHT else shades_lt.d4
-        background = shades.d2
+        accents = scheme.accents(colorname)
+        accents_bg = scheme.accents('background')
+        accents_lt = scheme.accents(LIGHT)
+        disabled = accents_lt.dark3 if scheme.is_light else accents_lt.dark4
+        background = accents.dark1
         foreground = scheme.foreground
-        focus_color = scheme.primary if colorname == 'light' else shades.base
-        hover_bg = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
+        focus_color = scheme.primary if colorname == LIGHT else accents.accent
+        hover_bg = accents_bg.light1 if scheme.is_dark else accents_lt.accent
 
         common = {'xy': ENTRY_BORDER_RECT, 'radius': ENTRY_BUILD_RADIUS,
                   'width': ENTRY_OUTLINE_WIDTH}
@@ -1126,13 +1129,14 @@ class ChromatkEngine(ThemeEngine):
         # combo field
         im, draw = image_draw(*draw_settings)
         draw.rounded_rectangle(**common, outline=background)
-        draw.line(ENTRY_LINE_RECT, fill=shades.d3, width=ENTRY_UNDERLINE_WIDTH)
+        draw.line(ENTRY_LINE_RECT, fill=accents.dark3,
+                  width=ENTRY_UNDERLINE_WIDTH)
         img_field = image_resize(im, ENTRY_FINAL_SIZE)
 
         # combo hover
         im, draw = image_draw(*draw_settings)
         draw.rounded_rectangle(**common, outline=background, fill=hover_bg)
-        draw.line(ENTRY_LINE_RECT, fill=shades.d3,
+        draw.line(ENTRY_LINE_RECT, fill=accents.dark3,
                   width=ENTRY_UNDERLINE_HOVER_WIDTH)
         img_hover = image_resize(im, ENTRY_FINAL_SIZE)
 
@@ -1188,7 +1192,7 @@ class ChromatkEngine(ThemeEngine):
         # normal style
         self.configure(style=ttkstyle, foreground=foreground,
                        insertcolor=foreground,
-                       selectbackground=shades_bg.base,
+                       selectbackground=accents_bg.accent,
                        selectforeground=foreground,
                        padding=ENTRY_PADDING)
 
@@ -1208,12 +1212,12 @@ class ChromatkEngine(ThemeEngine):
         scheme = options['scheme']
 
         # style colors
-        shades_bg = scheme.get_shades('background')
-        shades_lt = scheme.get_shades('light')
+        accents_bg = scheme.accents('background')
+        accents_lt = scheme.accents(LIGHT)
         foreground = scheme.foreground
         selectbackground = scheme.info
         selectforeground = scheme.get_foreground('info')
-        background = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
+        background = accents_bg.light1 if scheme.is_dark else accents_lt.accent
 
         # set the application window style
         widget = options['widget']
@@ -1237,19 +1241,19 @@ class ChromatkEngine(ThemeEngine):
         """Create the default menubutton style"""
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'primary'
+        colorname = options['color'] or PRIMARY
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
+        accents = scheme.accents(colorname)
         foreground = scheme.get_foreground(colorname)
-        background = shades.base
-        hover = shades.l1 if scheme.mode == LIGHT else shades.d1
-        disabled = shades.l2
+        background = accents.accent
+        hover = accents.light1 if scheme.is_light else accents.dark1
+        disabled = accents.light2
 
         # create style assets
         common = {'xy': BTN_BORDER_RECT, 'radius': BTN_BUILD_RADIUS,
-                  'outline': shades.d2, 'width': BTN_OUTLINE_WIDTH}
+                  'outline': accents.dark1, 'width': BTN_OUTLINE_WIDTH}
 
         if self.use_rgba:
             draw_settings = (BTN_BUILD_SIZE,)
@@ -1313,16 +1317,16 @@ class ChromatkEngine(ThemeEngine):
         """Create an outline menubutton style"""
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'primary'
+        colorname = options['color'] or PRIMARY
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_lt = scheme.get_shades('light')
-        shades_bg = scheme.get_shades('background')
-        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
-        background = foreground = shades.base
-        hover_bg = shades_bg.l2 if scheme.mode == DARK else shades_lt.base
+        accents = scheme.accents(colorname)
+        accents_lt = scheme.accents(LIGHT)
+        accents_bg = scheme.accents('background')
+        disabled = accents_lt.dark1 if scheme.is_light else accents_lt.dark4
+        background = foreground = accents.accent
+        hover_bg = accents_bg.light2 if scheme.is_dark else accents_lt.accent
 
         # create style assets
         common = {'xy': BTN_BORDER_RECT, 'radius': BTN_BUILD_RADIUS}
@@ -1407,11 +1411,11 @@ class ChromatkEngine(ThemeEngine):
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        colorname = options['color'] or 'light'
-        shades = scheme.get_shades(colorname)
+        colorname = options['color'] or LIGHT
+        accents = scheme.accents(colorname)
         background = scheme.background
-        inactive_bg = shades.d1 if scheme.mode == LIGHT else shades.d4
-        bordercolor = shades.d2 if scheme.mode == LIGHT else shades.d4
+        inactive_bg = accents.dark1 if scheme.is_light else accents.dark4
+        bordercolor = accents.dark1 if scheme.is_light else accents.dark4
 
         # notebook tab
         img_size = ss(64, 64)
@@ -1468,12 +1472,12 @@ class ChromatkEngine(ThemeEngine):
         """Create a panedwindow style"""
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'light'
+        colorname = options['color'] or LIGHT
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        background = shades.d3 if colorname == LIGHT else shades.base
+        accents = scheme.accents(colorname)
+        background = accents.dark3 if colorname == LIGHT else accents.accent
 
         # normal state
         self.configure(ttkstyle, background=background)
@@ -1484,17 +1488,17 @@ class ChromatkEngine(ThemeEngine):
         ss = self.scale_size
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
-        colorname = options['color'] or 'primary'
+        colorname = options['color'] or PRIMARY
         orient = options['orient']
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_bg = scheme.get_shades('background')
-        shades_lt = scheme.get_shades('light')
-        background = shades.base
-        outline = shades_bg.d2
-        troughcolor = shades_lt.d3 if scheme.mode == DARK else shades_bg.d1
+        accents = scheme.accents(colorname)
+        accents_bg = scheme.accents('background')
+        accents_lt = scheme.accents(LIGHT)
+        background = accents.accent
+        outline = accents_bg.dark1
+        troughcolor = accents_lt.dark3 if scheme.is_dark else accents_bg.dark1
 
         final_size = 20, 10
         img_size = 1000, 500
@@ -1533,21 +1537,21 @@ class ChromatkEngine(ThemeEngine):
         scheme = options['scheme']
         ttkstyle = options['ttkstyle']
         orient = options['orient']
-        colorname = options['color'] or 'primary'
-        shades = scheme.get_shades(colorname)
-        shades_bg = scheme.get_shades('background')
-        shades_lt = scheme.get_shades('light')
+        colorname = options['color'] or PRIMARY
+        accents = scheme.accents(colorname)
+        accents_bg = scheme.accents('background')
+        accents_lt = scheme.accents(LIGHT)
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        background = shades.base
+        background = accents.accent
         app_bg = scheme.background
-        outline = shades_lt.d3
-        disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
-        pressed = shades.d2 if scheme.mode == DARK else shades.l2
-        hover = shades.d1 if scheme.mode == DARK else shades.l1
-        troughcolor = shades_lt.d3 if scheme.mode == DARK else shades_bg.d1
-        hover_bg = shades_bg.l1 if scheme.mode == DARK else shades_lt.base
+        outline = accents_lt.dark3
+        disabled = accents_lt.dark1 if scheme.is_light else accents_lt.dark4
+        pressed = accents.dark1 if scheme.is_dark else accents.light2
+        hover = accents.dark1 if scheme.is_dark else accents.light1
+        troughcolor = accents_lt.dark3 if scheme.is_dark else accents_bg.dark1
+        hover_bg = accents_bg.light1 if scheme.is_dark else accents_lt.accent
 
         # create scale assets
         size = ss(32)
@@ -1625,13 +1629,13 @@ class ChromatkEngine(ThemeEngine):
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_bg = scheme.get_shades('background')
+        accents = scheme.accents(colorname)
+        accents_bg = scheme.accents('background')
 
         if colorname == LIGHT:
-            fill = shades.d3 if scheme.mode == DARK else shades_bg.d2
+            fill = accents.dark3 if scheme.is_dark else accents_bg.dark1
         else:
-            fill = shades.base
+            fill = accents.accent
 
         # create sizegrip assets
         box = self.scale_size(1)
