@@ -6,7 +6,21 @@ DEFAULT2 = '#111'
 LIGHT = 'light'
 DARK = 'dark'
 SHADES = [1.4, 1.3, 1.2, 1.1, 1.0, 0.9, 0.8, 0.7, 0.6]
-Shades = namedtuple('Shades', 'l4 l3 l2 l1 base d1 d2 d3 d4')
+
+
+class Accents:
+
+    def __init__(self, light4: str, light3: str, light2: str, light1: str,
+                 accent: str, dark1: str, dark2: str, dark3: str, dark4: str):
+        self.light4 = light4
+        self.light3 = light3
+        self.light2 = light2
+        self.light1 = light1
+        self.accent = accent
+        self.dark1 = dark1
+        self.dark2 = dark2
+        self.dark3 = dark3
+        self.dark4 = dark4
 
 
 class Scheme:
@@ -39,6 +53,14 @@ class Scheme:
         self.dark = colors.get('dark', DEFAULT1)
         self.background = colors.get('background', DEFAULT1)
         self.foreground = colors.get('foreground', DEFAULT2)
+
+    @property
+    def is_dark(self):
+        return self.mode == DARK
+
+    @property
+    def is_light(self):
+        return self.mode == LIGHT
 
     def get_foreground(self, color_name):
         """Return the foreground color appropriate for the color name.
@@ -81,8 +103,8 @@ class Scheme:
             return
         return self.__dict__.get(colorname)
 
-    def get_shades(self, colorname):
-        """Get a list of shades for this color.
+    def accents(self, colorname):
+        """Get a list of accents for this color.
         The list will include a range of colors with a factor between 1.4 and
         0.6 of the luminosity of the original color, which is at index 4.
 
@@ -104,7 +126,7 @@ class Scheme:
             color += f'{int(max(0, min(grn * shade, 255))):02x}'
             color += f'{int(max(0, min(blu * shade, 255))):02x}'
             colors.append(color)
-        return Shades(*colors)
+        return Accents(*colors)
 
     def __iter__(self):
         colors = self.__dict__.copy()

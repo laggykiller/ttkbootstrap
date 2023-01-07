@@ -68,7 +68,7 @@ class BootstyleEngine(ThemeEngine):
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
+        shades = scheme.accents(colorname)
         foreground = scheme.get_foreground(colorname)
         background = shades.base
         hover = shades.l1 if scheme.mode == LIGHT else shades.d1
@@ -110,9 +110,9 @@ class BootstyleEngine(ThemeEngine):
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_lt = scheme.get_shades('light')
-        shades_bg = scheme.get_shades('background')
+        shades = scheme.accents(colorname)
+        shades_lt = scheme.accents('light')
+        shades_bg = scheme.accents('background')
         disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
         bordercolor = foreground = shades.base
         hover_fg = scheme.get_foreground(colorname)
@@ -154,7 +154,7 @@ class BootstyleEngine(ThemeEngine):
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades_lt = scheme.get_shades('light')
+        shades_lt = scheme.accents('light')
         disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
         foreground = scheme.get_color(colorname)
         background = scheme.background
@@ -198,9 +198,9 @@ class BootstyleEngine(ThemeEngine):
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_lt = scheme.get_shades('light')
-        shades_bg = scheme.get_shades('background')
+        shades = scheme.accents(colorname)
+        shades_lt = scheme.accents('light')
+        shades_bg = scheme.accents('background')
         foreground = scheme.background
         background = shades.base
         app_bg = scheme.background
@@ -355,9 +355,9 @@ class BootstyleEngine(ThemeEngine):
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_lt = scheme.get_shades('light')
-        shades_bg = scheme.get_shades('background')
+        shades = scheme.accents(colorname)
+        shades_lt = scheme.accents('light')
+        shades_bg = scheme.accents('background')
         app_bg = scheme.background
         background = shades.base
         disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
@@ -468,8 +468,8 @@ class BootstyleEngine(ThemeEngine):
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_lt = scheme.get_shades('light')
+        shades = scheme.accents(colorname)
+        shades_lt = scheme.accents('light')
         background = shades.base
         app_bg = scheme.background
         disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
@@ -590,7 +590,7 @@ class BootstyleEngine(ThemeEngine):
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades_lt = scheme.get_shades(colorname)
+        shades_lt = scheme.accents(colorname)
         background = shades_lt.d3
 
         # create scrollbar assets
@@ -658,9 +658,9 @@ class BootstyleEngine(ThemeEngine):
         self.register_style(options['ttkstyle'], scheme)
 
         # style colors
-        shades = scheme.get_shades(colorname)
-        shades_bg = scheme.get_shades('background')
-        shades_lt = scheme.get_shades('light')
+        shades = scheme.accents(colorname)
+        shades_bg = scheme.accents('background')
+        shades_lt = scheme.accents('light')
         disabled = shades_lt.d2 if scheme.mode == LIGHT else shades_lt.d4
         background = shades.d2
         foreground = scheme.foreground
