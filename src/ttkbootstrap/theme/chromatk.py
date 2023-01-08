@@ -8,20 +8,26 @@ from tkinter.font import Font
 # TODO standardize focus effects on elements
 # TODO define and create chevron element once in setup script
 # TODO remove builder methods from Style class and implement in Engine
+# TODO vertical scrollbar sizing is slower than desired
+# TODO create both inline and compact spinbox styles, inline only currently
 
-MINIMUM_WIDTH = 120  # pixels
+"""
+    Making smooth edges using pillow is know problem. The only way to do
+    this currently is to make the image large and then resize using anti-
+    aliasing. This is a bit awkward, but it works for now until they can
+    improve the api in this regard.  
+"""
+
+
+MINIMUM_WIDTH = 140  # pixels
 
 # button style constants
-BTN_BUILD_SIZE = 2000, 2000
-BTN_FINAL_SIZE = 1000, 1000
+BTN_BUILD_SIZE = 1000, 1000
+BTN_FINAL_SIZE = 500, 500
 BTN_OUTLINE_WIDTH = 2
-BTN_BUILD_RADIUS = 8
-BTN_BORDER_RECT = (BTN_OUTLINE_WIDTH,
-                   BTN_OUTLINE_WIDTH,
-                   BTN_BUILD_SIZE[0] - BTN_OUTLINE_WIDTH - 1,
-                   BTN_BUILD_SIZE[0] - BTN_OUTLINE_WIDTH - 1)
-
-BTN_PADDING = 12, 1
+BTN_BUILD_RADIUS = 4
+BTN_BORDER_RECT = (1, 1, BTN_BUILD_SIZE[0]-2, BTN_BUILD_SIZE[0]-2)
+BTN_PADDING = 12, 4
 
 # radiobutton and checkbutton style constants
 CB_BUILD_SIZE = 640, 640
@@ -32,10 +38,7 @@ CB_OUTLINE_WIDTH = 24
 CB_LINE_WIDTH = 40
 CB_CHECK_RECT = 190, 330, 293, 433, 516, 210
 CB_DASH_RECT = 213, 320, 427, 320
-CB_BORDER_RECT = (CB_BORDER_WIDTH,
-                  CB_BORDER_WIDTH,
-                  CB_BUILD_SIZE[0] - CB_BORDER_WIDTH - 1,
-                  CB_BUILD_SIZE[0] - CB_BORDER_WIDTH - 1)
+CB_BORDER_RECT = (1, 1, CB_BUILD_SIZE[0]-2, CB_BUILD_SIZE[0]-2)
 RB_OUTER_WIDTH = 3
 RB_INNER_WIDTH_1 = 140
 RB_INNER_WIDTH_2 = 110
@@ -58,34 +61,27 @@ SB_BUILD_SIZE = 2000, 500
 SB_FINAL_SIZE = 1000, 250
 SB_BUILD_RADIUS = 10
 SB_LINE_RECT = 8, 249, 1991, 249
-SB_THUMB_RECT = (0, 0, SB_BUILD_SIZE[0] - 1, SB_BUILD_SIZE[1] - 1)
+SB_THUMB_RECT = (1, 1, SB_BUILD_SIZE[0]-2, SB_BUILD_SIZE[1]-2)
 SB_TROUGH_OUTLINE_WIDTH = 2
-SB_TROUGH_RECT = (SB_TROUGH_OUTLINE_WIDTH,
-                  SB_TROUGH_OUTLINE_WIDTH,
-                  SB_BUILD_SIZE[0] - SB_TROUGH_OUTLINE_WIDTH - 1,
-                  SB_BUILD_SIZE[1] - SB_TROUGH_OUTLINE_WIDTH - 1)
+SB_TROUGH_RECT = (1, 1, SB_BUILD_SIZE[0]-2, SB_BUILD_SIZE[1]-2)
 SB_RESTING_WIDTH = 485
-SB_TROUGH_PAD = 3
+SB_TROUGH_PAD = 5
 
 # entry sizes
-ENTRY_BUILD_SIZE = 2000, 2000
-ENTRY_FINAL_SIZE = 1000, 1000
-ENTRY_OUTLINE_WIDTH = 2
-ENTRY_BUILD_RADIUS = 8
-ENTRY_LINE_RECT = 6, 1993, 1993, 1993
-ENTRY_UNDERLINE_WIDTH = 2
-ENTRY_UNDERLINE_HOVER_WIDTH = 3
+ENTRY_BUILD_SIZE = 1000, 1000
+ENTRY_FINAL_SIZE = 500, 500
+ENTRY_OUTLINE_WIDTH = 1
+ENTRY_BUILD_RADIUS = 4
+ENTRY_LINE_RECT = 4, 996, 995, 996
+ENTRY_UNDERLINE_WIDTH = 1
+ENTRY_UNDERLINE_HOVER_WIDTH = 1
 ENTRY_UNDERLINE_FOCUS_WIDTH = 4
-ENTRY_PADDING = 8, 4
-ENTRY_BORDER_RECT = (ENTRY_OUTLINE_WIDTH,
-                     ENTRY_OUTLINE_WIDTH,
-                     ENTRY_BUILD_SIZE[0] - ENTRY_OUTLINE_WIDTH - 1,
-                     ENTRY_BUILD_SIZE[0] - ENTRY_OUTLINE_WIDTH - 1)
-
+ENTRY_PADDING = 12, 4
+ENTRY_BORDER_RECT = (1, 1, ENTRY_BUILD_SIZE[0]-2, ENTRY_BUILD_SIZE[0]-2)
 
 # chevron sizes
 CHEVRON_BUILD_SIZE = 1400, 755
-CHEVRON_FINAL_SIZE = 14, 8
+CHEVRON_FINAL_SIZE = 18, 9
 CHEVRON_LINE_WIDTH = 100
 CHEVRON_LINE_PRESSED_WIDTH = 200
 CHEVRON_LINE_RECT = 20, 20, 735, 735, 700, 700, 1380, 20
@@ -105,6 +101,13 @@ class ChromatkEngine(ThemeEngine):
         self.use_rgba = False
         self.create_named_fonts()
         self.register_keywords()
+        self.miscellaneous_setup()
+
+    def miscellaneous_setup(self):
+        # set default font for all widgets that are not style configurable
+        self.style.tk.call('option', 'add', '*font', 'TkBody')
+        # set default font for all style configurable widgets
+        self.configure(".", font="TkBody")
 
     def register_keywords(self):
         self.handler_set('button', self.create_button_style)
@@ -147,14 +150,14 @@ class ChromatkEngine(ThemeEngine):
 
         self.register_assets(
             'fonts',
-            Font(name='TkCaption', family='Segoe UI', size=s(12)),
-            Font(name='TkBody', family='Segoe UI', size=s(14)),
-            Font(name='TkBodyStrong', family='Segoe UI Semibold', size=s(14)),
-            Font(name='TkBodyLarge', family='Segoe UI', size=s(18)),
-            Font(name='TkSubtitle', family='Segoe UI Semibold', size=s(20)),
-            Font(name='TkTitle', family='Segoe UI Semibold', size=s(28)),
-            Font(name='TkTitleLarge', family='Segoe UI Semibold', size=s(40)),
-            Font(name='TkDisplay', family='Segoe UI Semibold', size=s(68)))
+            Font(name='TkCaption', family='Segoe UI', size=10),
+            Font(name='TkBody', family='Segoe UI', size=12),
+            Font(name='TkBodyStrong', family='Segoe UI Semibold', size=12),
+            Font(name='TkBodyLarge', family='Segoe UI', size=16),
+            Font(name='TkSubtitle', family='Segoe UI Semibold', size=18),
+            Font(name='TkTitle', family='Segoe UI Semibold', size=26),
+            Font(name='TkTitleLarge', family='Segoe UI Semibold', size=36),
+            Font(name='TkDisplay', family='Segoe UI Semibold', size=60))
 
     def create_window_style(self, options):
         """Style the application main window"""
@@ -231,8 +234,7 @@ class ChromatkEngine(ThemeEngine):
 
         # widget properties
         self.configure(ttkstyle, foreground=foreground, focuscolor=foreground,
-                       relief=RAISED, anchor=CENTER, font='TkBody',
-                       padding=BTN_PADDING)
+                       relief=RAISED, anchor=CENTER, padding=BTN_PADDING)
 
         # widget state properties
         self.map(ttkstyle, 'foreground', [('disabled', disabled)])
@@ -324,8 +326,7 @@ class ChromatkEngine(ThemeEngine):
 
         # normal state
         self.configure(ttkstyle, relief=RAISED, foreground=foreground,
-                       borderwidth=0, anchor=CENTER, font='TkBody',
-                       padding=BTN_PADDING)
+                       borderwidth=0, anchor=CENTER, padding=BTN_PADDING)
 
         # button layout
         layout = self.layout_builder(ttkstyle)
@@ -473,7 +474,7 @@ class ChromatkEngine(ThemeEngine):
         # normal state style
         self.configure(ttkstyle, foreground=scheme.foreground,
                        background=scheme.background, focuscolor='',
-                       font='TkBody', padding=BTN_PADDING)
+                       padding=BTN_PADDING)
 
         # state mapping
         self.map(ttkstyle, 'foreground', [('disabled', disabled)])
@@ -586,9 +587,8 @@ class ChromatkEngine(ThemeEngine):
                              img_on_hover, img_off)
 
         # normal style
-        self.configure(ttkstyle, font='TkBody', foreground=scheme.foreground,
-                       background=scheme.background, focuscolor='',
-                       padding=BTN_PADDING)
+        self.configure(ttkstyle, foreground=scheme.foreground, focuscolor='',
+                       background=scheme.background, padding=BTN_PADDING)
 
         # state mapping
         self.map(ttkstyle, 'foreground', [('disabled', disabled)])
@@ -778,25 +778,31 @@ class ChromatkEngine(ThemeEngine):
                              img_trough_norm, img_trough_hover)
 
         # create elements
+        if orient == HORIZONTAL:
+            side = LEFT
+            width, height = MINIMUM_WIDTH, 0
+        else:
+            side = BOTTOM
+            width, height = 0, MINIMUM_WIDTH
+
         thumb_name = f'{ttkstyle}.thumb'
-        elem = self.element_builder(thumb_name, img_thumb_norm, width=0,
-                                    height=0, border=SB_BUILD_RADIUS // 2)
+        elem = self.element_builder(thumb_name, img_thumb_norm, width=width,
+                                    height=height, border=SB_BUILD_RADIUS-4)
         elem.map('hover', img_thumb_hover)
         elem.build()
 
         trough_name = f'{ttkstyle}.trough'
-        elem = self.element_builder(trough_name, img_trough_norm, width=0,
-                                    height=0, border=SB_BUILD_RADIUS,
+        elem = self.element_builder(trough_name, img_trough_norm, width=width,
+                                    height=height, border=SB_BUILD_RADIUS,
                                     padding=SB_TROUGH_PAD)
         elem.map('hover', img_trough_hover)
         elem.build()
 
         # create progressbar layout
-        sticky = EW if orient == HORIZONTAL else NS
         layout = self.layout_builder(ttkstyle)
         layout.build([
-            Element(trough_name, sticky=sticky), [
-                Element(thumb_name, expand=True)]])
+            Element(trough_name, side=side, expand=True), [
+                Element(thumb_name, side=side, expand=True)]])
 
     def create_spinbox_style(self, options):
         scheme = options['scheme']
@@ -865,8 +871,10 @@ class ChromatkEngine(ThemeEngine):
         img_chev_up = image_resize(im.rotate(180), CHEVRON_FINAL_SIZE)
 
         # chevron pressed
+        #   The field bubbles up the hover event and causes the button to light
+        #   up when it shouldn't, so there is only a pressed state effect.
         im, draw = image_draw(CHEVRON_BUILD_SIZE)
-        draw.line(CHEVRON_LINE_RECT, fill=foreground,
+        draw.line(CHEVRON_LINE_RECT, fill=focus_color,
                   width=CHEVRON_LINE_PRESSED_WIDTH)
         img_chev_dwp = image_resize(im, CHEVRON_FINAL_SIZE)
         img_chev_upp = image_resize(im.rotate(180), CHEVRON_FINAL_SIZE)
@@ -884,14 +892,14 @@ class ChromatkEngine(ThemeEngine):
 
         chev_up_name = f'{ttkstyle}.uparrow'
         elem = self.element_builder(chev_up_name, img_chev_up, sticky='',
-                                    padding='16 4')
+                                    padding='24 4')
         elem.map('disabled', img_chev_up_dis)
         elem.map('pressed !disabled', img_chev_upp)
         elem.build()
 
         chev_down_name = f'{ttkstyle}.downarrow'
         elem = self.element_builder(chev_down_name, img_chev_dw, sticky='',
-                                    padding='8 4')
+                                    padding='4')
         elem.map('disabled', img_chev_dw_dis)
         elem.map('pressed !disabled', img_chev_dwp)
         elem.build()
@@ -1096,7 +1104,7 @@ class ChromatkEngine(ThemeEngine):
         # normal style
         self.configure(ttkstyle, foreground=foreground, insertcolor=foreground,
                        selectbackground=scheme.primary, padding=ENTRY_PADDING,
-                       selectforeground=select_fg, font='TkDefaultFont')
+                       selectforeground=select_fg)
 
         # state style map
         self.map(ttkstyle, 'foreground', [('disabled', disabled)])
@@ -1175,7 +1183,7 @@ class ChromatkEngine(ThemeEngine):
 
         chevron_name = f'{ttkstyle}.chevron'
         elem = self.element_builder(chevron_name, img_chevron, sticky='',
-                                    padding='8 4')
+                                    padding='12 4 4 4')
         elem.map('disabled', img_chev_dis)
         elem.build()
 
@@ -1302,13 +1310,13 @@ class ChromatkEngine(ThemeEngine):
         layout.build([
             Element(button_name, sticky=NSEW), [
                 Element('Menubutton.focus', sticky=NSEW), [
-                    Element('Menubutton.padding', sticky=EW), [
+                    Element('Menubutton.padding', expand=True), [
                         Element(chevron_name, side=RIGHT, sticky=''),
-                        Element('Menubutton.label', side=LEFT, sticky='')]]]])
+                        Element('Menubutton.label', side=LEFT, expand=True)]]]]
+        )
 
         # normal state
-        self.configure(ttkstyle, foreground=foreground, anchor=CENTER,
-                       padding=BTN_PADDING)
+        self.configure(ttkstyle, foreground=foreground, padding=BTN_PADDING)
 
         # state map
         self.map(ttkstyle, 'foreground', [('disabled', disabled)])
@@ -1392,13 +1400,14 @@ class ChromatkEngine(ThemeEngine):
         layout.build([
             Element(button_name, sticky=NSEW), [
                 Element('Menubutton.focus', sticky=NSEW), [
-                    Element('Menubutton.padding', sticky=EW), [
+                    Element('Menubutton.padding', expand=True), [
                         Element(chevron_name, side=RIGHT, sticky=''),
-                        Element('Menubutton.label', side=LEFT, sticky='')]]]])
+                        Element('Menubutton.label', side=LEFT, expand=True)]]]]
+        )
 
         # normal state
         self.configure(ttkstyle, foreground=foreground, focuscolor=foreground,
-                       anchor=CENTER, padding=BTN_PADDING)
+                       padding=BTN_PADDING)
 
         # state map
         self.map(ttkstyle, 'foreground', [('disabled', disabled)])
