@@ -331,12 +331,23 @@ class Toplevel(tkinter.Toplevel):
             **kwargs (Dict):
                 Other optional keyword arguments.
         """
-        super().__init__(**kwargs)
-        winsys = self.tk.call('tk', 'windowingsystem')
+        if 'iconify' in kwargs:
+            iconify = kwargs.pop('iconify')
+        else:
+            iconify = None
 
-        if iconphoto:
-            self._icon = iconphoto or tkinter.PhotoImage(data=Icon.icon)
-            self.iconphoto(False, self._icon)
+        super().__init__(**kwargs)
+        self.winsys = self.tk.call('tk', 'windowingsystem')
+
+        if iconphoto != '':
+            try:
+                # the user provided an image path
+                self._icon = tkinter.PhotoImage(file=iconphoto, master=self)
+                self.iconphoto(True, self._icon)
+            except tkinter.TclError:
+                # The fallback icon if the user icon fails.
+                print('iconphoto path is bad; using default image.')
+                pass
 
         self.title(title)
 
@@ -360,6 +371,14 @@ class Toplevel(tkinter.Toplevel):
             width, height = resizable
             self.resizable(width, height)
         
+        if alpha is not None:
+            if self.winsys == 'x11':
+                self.wait_visibility(self)
+            self.attributes("-alpha", alpha)
+        
+        if iconify:
+            self.iconify()
+        
         if transient is not None:
             self.transient(transient)
         
@@ -367,21 +386,16 @@ class Toplevel(tkinter.Toplevel):
             self.overrideredirect(1)
         
         if windowtype is not None:
-            if winsys == 'x11':
+            if self.winsys == 'x11':
                 self.attributes("-type", windowtype)
         
         if topmost:
             self.attributes("-topmost", 1)
         
         if toolwindow:
-            if winsys == 'win32':
+            if self.winsys == 'win32':
                 self.attributes("-toolwindow", 1)
-        
-        if alpha is not None:
-            if winsys == 'x11':
-                self.wait_visibility(self)
-            self.attributes("-alpha", alpha)
-
+                
     @property
     def style(self):
         """Return a reference to the `ttkbootstrap.style.Style` object."""
