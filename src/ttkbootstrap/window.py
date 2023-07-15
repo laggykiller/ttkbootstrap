@@ -244,7 +244,7 @@ class Toplevel(tkinter.Toplevel):
     def __init__(
         self,
         title="ttkbootstrap",
-        iconphoto=None,
+        iconphoto='',
         size=None,
         position=None,
         minsize=None,
