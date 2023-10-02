@@ -1,6 +1,12 @@
 import setuptools
 
 long_description = """
+# NOTICE
+- This is a fork from https://github.com/israel-dryer/ttkbootstrap
+- This is uploaded to PyPI as dependency of my project
+- I am forced to upload to PyPI this as I cannot upload project that has git repo as dependency
+- Changes could be seen from https://github.com/laggykiller/ttkbootstrap
+
 ![](https://img.shields.io/github/release/israel-dryer/ttkbootstrap.svg)
 [![Downloads](https://pepy.tech/badge/ttkbootstrap)](https://pepy.tech/project/ttkbootstrap)
 [![Downloads](https://pepy.tech/badge/ttkbootstrap/month)](https://pepy.tech/project/ttkbootstrap)
@@ -69,11 +75,11 @@ The new keyword API is very flexible. The following examples all produce the sam
 """
 
 setuptools.setup(
-    name="ttkbootstrap",
+    name="ttkbootstrap-fork-laggykiller",
     version="1.5.1",
     author="Israel Dryer",
     author_email="israel.dryer@gmail.com",
-    description="A supercharged theme extension for tkinter that enables on-demand modern flat style themes inspired by Bootstrap.",
+    description="A fork of ttkbootstrap for personal use",
     long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[

@@ -1,3 +1,9 @@
+# NOTICE
+- This is a fork from https://github.com/israel-dryer/ttkbootstrap
+- This is uploaded to PyPI as dependency of my project
+- I am forced to upload to PyPI this as I cannot upload project that has git repo as dependency
+- Changes could be seen from https://github.com/laggykiller/ttkbootstrap
+
 ![](https://img.shields.io/github/release/israel-dryer/ttkbootstrap.svg)
 [![Downloads](https://pepy.tech/badge/ttkbootstrap)](https://pepy.tech/project/ttkbootstrap)
 [![Downloads](https://pepy.tech/badge/ttkbootstrap/month)](https://pepy.tech/project/ttkbootstrap)
