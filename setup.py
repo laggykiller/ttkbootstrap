@@ -76,7 +76,7 @@ The new keyword API is very flexible. The following examples all produce the sam
 
 setuptools.setup(
     name="ttkbootstrap-fork-laggykiller",
-    version="1.5.1",
+    version="1.5.1-rev1",
     author="Israel Dryer",
     author_email="israel.dryer@gmail.com",
     description="A fork of ttkbootstrap for personal use",
